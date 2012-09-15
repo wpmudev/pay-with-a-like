@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pay With a Like 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-02 12:06+0700\n"
-"PO-Revision-Date: 2012-05-02 12:06+0700\n"
+"POT-Creation-Date: 2012-09-15 10:48+0700\n"
+"PO-Revision-Date: 2012-09-15 10:49+0700\n"
 "Last-Translator: Incsub <puck198@hotmail.com>\n"
 "Language-Team: incsub\n"
 "MIME-Version: 1.0\n"
@@ -12,521 +12,694 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-Language: English\n"
-"X-Poedit-SearchPath-0: C:\\Documents and Settings\\PUCK\\Desktop\\pay-with-a-like\n"
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:90
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:107
 msgid "Settings"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:449
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:520
 msgid "Something went wrong. Please refresh the page and try again."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:520
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:741
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1159
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:612
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:916
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1589
 msgid "Pay With a Like"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:543
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:637
+msgid "Enabled"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:638
+msgid "Disabled"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:639
+msgid "Automatic excerpt"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:640
+msgid "Manual excerpt"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:641
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1098
+msgid "Use selection tool"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:644
 msgid "page"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:545
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:646
 msgid "post"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:575
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:724
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:747
+msgid "Follow global setting"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:725
+msgid "Always enabled"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:726
+msgid "Always disabled"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:730
 msgid "Enabled?"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:578
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:734
 #, php-format
 msgid "Selects if Pay With a Like is enabled for this %s or not. If Follow global setting is selected, General Setting page selection will be valid. Always enabled and Always disabled selections will enable or disable Pay With a Like for this %s, respectively, overriding general setting."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:586
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:606
-msgid "Follow global setting"
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:738
+msgid "Effective status"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:587
-msgid "Always enabled"
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:742
+#, php-format
+msgid "Effective status dynamically shows the final result of the setting that will be applied to this %s. Disabled means Pay With a Like will not work for this %s. It takes global settings into account and helps you to check if your intention will be correctly reflected to the settings after you save."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:588
-msgid "Always disabled"
-msgstr ""
-
-#: C:\Documents
-#: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:593
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:753
 msgid "Method"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:596
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:757
 #, php-format
 msgid "Selects the content protection method for this %s. If Follow Global Setting is selected, method selected in General Settings page will be applied. If you want to override general settings, select one of the other methods. With Use Selection Tool you need to select each content using the icon %s on the editor tool bar. For other methods refer to the settings page."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:607
-msgid "Automatic excerpt"
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:761
+msgid "Effective method"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:608
-msgid "Manual excerpt"
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:765
+#, php-format
+msgid "Effective method dynamically shows the final result of the setting that will be applied to this %s. It takes global settings into account and helps you to check if your intention will be correctly reflected to the settings after you save."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:609
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:902
-msgid "Use selection tool"
-msgstr ""
-
-#: C:\Documents
-#: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:614
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:771
 msgid "Excerpt length"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:617
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:775
 #, php-format
 msgid "If you want to override the number of words that will be used as an excerpt for the unprotected content, enter it here. Please note that this value is only used when Automatic Excerpt method is applied to the %s."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:741
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:837
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:887
+msgid "To see the full content, share this page by clicking one of the buttons below"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:916
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1032
 msgid "Pay With a Like Settings"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:785
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:960
 msgid "<b>[Pay With a Like]</b> Settings saved"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:792
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:967
 msgid "<b>[Pay With a Like]</b> You are not authorised to do this."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:801
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:976
 msgid "<b>[Pay With a Like]</b> You didn't select any buttons. Plugin will not function as expected."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:816
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:991
 #, php-format
 msgid "<b>[Pay With a Like]</b> It looks like you have just installed me. You may want to adjust some %s. If you are using a cache plugin, please clear your cache."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:816
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:991
 msgid "settings"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:832
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1001
+msgid "<b>[Pay With a Like]</b> As Social Networking scripts cannot access your local pages, plugin will not function properly in localhost."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1006
+msgid "<b>[Pay With a Like]</b> Your WPLANG setting in wp-config.php is wrong. Facebook button will not work."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1027
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:844
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1039
 msgid "Global Settings"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:846
-msgid "These settings provide a quick way to set Pay With a Like for your posts and pages. They can be overridden per post basis using post editor page."
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1041
+msgid "Pay With a Like allows protecting posts/pages or parts of posts/pages until visitor likes the protected content with Facebook, Linkedin, Twitter or Google +1. These settings provide a quick way to set Pay With a Like for your posts and pages. They can be overridden per post basis using post editor page."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:851
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1046
 msgid "Activation for posts"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:854
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1049
 msgid "Disabled for all posts"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:855
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1050
 msgid "Enabled for all posts"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:861
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1056
 msgid "Activation for pages"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:864
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1059
 msgid "Disabled for all pages"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:865
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1060
 msgid "Enabled for all pages"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:877
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1072
 msgid "You have the following custom post type(s): "
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:882
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1076
+msgid " Note: See the below customization section for details."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1078
 msgid "You don't have any custom post types. Changing this setting will have no effect."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:886
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1082
 msgid "Activation for custom post types"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:889
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1085
 msgid "Disabled for all custom post types"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:890
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1086
 msgid "Enabled for all custom post types"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:897
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1093
 msgid "Revealed content selection method"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:900
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1096
 msgid "Automatic excerpt from the content"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:901
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1097
 msgid "Manual excerpt from post excerpt field"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:905
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1101
 #, php-format
 msgid "With this setting, you can select the method that reveals the part of your contents *before* a Like is clicked. Automatic excerpt selects the first %d words, number being adjustable from \"excerpt length\" field. Manual excerpt displays whatever included in the post excerpt field of the post. With selection tool, you can freely select part(s) of the content to be protected. Using the latter one may be a little bit sophisticated, but enables more than one Likes on the same page."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:918
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1114
 msgid "Excerpt length (words)"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:920
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1116
 msgid "Number of words of the post content that will be displayed publicly. Only effective if Automatic excerpt is selected."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:928
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1124
 msgid "Accessibility Settings"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:934
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1130
 msgid "Enable on the home page"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:937
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:947
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:958
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:969
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1000
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1058
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1078
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1133
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1143
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1154
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1165
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1196
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1254
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1274
 msgid "Yes"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:938
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:948
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:959
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:970
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1001
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1059
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1079
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1134
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1144
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1155
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1166
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1197
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1255
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1275
 msgid "No"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:944
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1140
 msgid "Enable for multiple post pages"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:950
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1146
 msgid "Enables the plugin for pages (except the home page) which contain content for more that one post/page, e.g. archive, category pages. Some themes use excerpts here so enabling plugin for these pages may cause strange output. "
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:955
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1151
 msgid "Admin sees full content"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:961
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1157
 msgid "You may want to select No for test purposes."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:966
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1162
 msgid "Authorized users see full content"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:972
-msgid "If Yes, authorized users will see the full content without the need to pay or subscribe. Admin setting is independent of this one."
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1168
+msgid "If Yes, authorized users will see the full content without the need to like a content. Authorization level will be revealed after you select yes. Admin setting is independent of this one."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:984
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1180
 msgid "User level where authorization starts"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:987
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1183
 msgid "Editor"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:988
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1184
 msgid "Author"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:989
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1185
 msgid "Contributor"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:990
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1186
 msgid "Subscriber"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:992
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1188
 msgid "If the above field is selected as yes, users having a higher level than this selection will see the full content."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:997
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1193
 msgid "Search bots see full content"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1003
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1199
 msgid "You may want to enable this for SEO purposes. Warning: Your full content may be visible in search engine results."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1008
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1204
 msgid "Cookie validity time (hours)"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1010
-msgid "Validity time of the cookie which lets visitor to be exempt from the protection after he/she liked. Tip: If you want the cookie to expire at the end of the session (when the browser closes), enter zero here."
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1206
+msgid "Validity time of the cookie which lets visitor to be exempt from the protection after he/she liked. Tip: If you want the cookie to expire at the end of the session (when the browser is closed), enter zero here."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1018
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1214
 msgid "Social Button Settings"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1024
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1220
 msgid "Buttons to use"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1036
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1232
 msgid "Load scripts for"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1042
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1238
 msgid "If you have other plugins which already use these scripts, duplicate load of them may create conflict. In that case uncheck related checkbox. If you are unsure and not having any issues, keep this settings checked."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1049
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1245
 msgid "Description above the buttons"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1051
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1247
 msgid "You may want to write something here that will encourage the visitor to click a button. If you want individual descriptions on post basis, use Selection Tool method and write description inside the tool."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1055
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1251
 msgid "Sitewide Like"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1061
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1257
 msgid "If selected yes, when visitor likes a single content, all protected content on the website will be revealed to him/her."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1066
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1262
 msgid "URL to be liked"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1070
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1266
 #, php-format
-msgid "You can enter a single url to be liked, e.g. your home page, %s. If left empty, the page that button is clicked will be liked."
+msgid "You can enter a single URL to be liked, e.g. your home page, %s. NOT your page on the Social Networking Website, e.g. Facebook. If left empty, the page that button is clicked will be liked."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1075
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1271
 msgid "Like Random Page"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1081
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1277
 msgid "If selected yes, a random published page or post on your website will be selected to be liked. This disables \"URL to be liked\" setting."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1098
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1294
 msgid "Save Changes"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1166
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1304
+msgid "Basic Statistics"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1351
+msgid "Total likes"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1357
+msgid "likes"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1372
+msgid "Most liked posts"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1391
+msgid "Clear Statistics"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1391
+msgid "Clicking this button deletes statistics saved on the server"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1396
+msgid "Export Statistics"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1396
+msgid "If you click this button a CSV file including statistics will be saved on your PC"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1411
+msgid "Customization Instructions"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1414
+msgid "Some custom post types use templates which take the post content directly from the database. For such applications you may need to use <b>wpmudev_pwal</b> function to manage the content."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1418
+msgid "Example: Suppose that the content of a post type is displayed like this: <code>&lt;?php echo custom_description(); ?&gt;</code>. Then edit that part of the template like this:"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1431
+msgid "Also create a function in your functions.php to call necessary css and js files, like so:"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1450
+#, php-format
+msgid "If you want to apply your own styles copy contents of front.css to your theme css file and add this code inside functions.php of your theme:<code>add_theme_support( \"pay_with_a_like_style\" )</code> OR copy and rename the default css file <b>%s</b> as <b>%s</b> and edit this latter file. Then, your edited styles will not be affected from plugin updates."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1461
+msgid "Are you sure to clear statistics?"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1468
+msgid "Statistics cleared..."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1485
+msgid "Statistics could not be deleted"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1493
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1511
+msgid "Nothing to download!"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1596
 msgid "Please enter a value!"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1170
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1600
 msgid "Description"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1174
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1604
 msgid "Description for this selection."
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1182
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1612
 msgid "Cancel"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1186
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1616
 msgid "Insert"
 msgstr ""
 
 #: C:\Documents
 #: and
-#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1254
-msgid "Please install the latest version of <a href=\"http://premium.wpmudev.org/project/update-notifications/\" title=\"Download Now &raquo;\">our free Update Notifications plugin</a> which helps you stay up-to-date with the most stable, secure versions of WPMU DEV themes and plugins. <a href=\"http://premium.wpmudev.org/wpmu-dev/update-notifications-plugin-information/\">More information &raquo;</a>"
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1742
+#, php-format
+msgid "Easily get updates, support, and one-click WPMU DEV plugin/theme installations right from in your dashboard - <strong><a href=\"%s\" title=\"Install Now &raquo;\">install the free WPMU DEV Dashboard plugin</a></strong>. &nbsp;&nbsp;&nbsp;<small><a href=\"http://premium.wpmudev.org/wpmu-dev/update-notifications-plugin-information/\">(find out more)</a></small>"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-with-a-like/pay-with-a-like.php:1746
+#, php-format
+msgid "Updates, Support, Premium Plugins, Community - <strong><a href=\"%s\" title=\"Activate Now &raquo;\">activate the WPMU DEV Dashboard plugin now</a></strong>."
 msgstr ""
 
 #: C:\Documents
