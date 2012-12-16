@@ -1,0 +1,594 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pay With a Like 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-12-16 13:20+0700\n"
+"PO-Revision-Date: 2012-12-16 13:20+0700\n"
+"Last-Translator: incsub.com <hakan@incsub.com>\n"
+"Language-Team: incsub\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 1.5.3\n"
+"X-Poedit-SearchPath-0: C:\\Users\\Hakan\\Desktop\\pay-with-a-like\n"
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:106
+msgid "Settings"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:520
+msgid "Something went wrong. Please refresh the page and try again."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:614
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:918
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1606
+msgid "Pay With a Like"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:639
+msgid "Enabled"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:640
+msgid "Disabled"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:641
+msgid "Automatic excerpt"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:642
+msgid "Manual excerpt"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:643
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1100
+msgid "Use selection tool"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:646
+msgid "page"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:648
+msgid "post"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:726
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:749
+msgid "Follow global setting"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:727
+msgid "Always enabled"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:728
+msgid "Always disabled"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:732
+msgid "Enabled?"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:736
+#, php-format
+msgid ""
+"Selects if Pay With a Like is enabled for this %s or not. If Follow global "
+"setting is selected, General Setting page selection will be valid. Always "
+"enabled and Always disabled selections will enable or disable Pay With a "
+"Like for this %s, respectively, overriding general setting."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:740
+msgid "Effective status"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:744
+#, php-format
+msgid ""
+"Effective status dynamically shows the final result of the setting that will "
+"be applied to this %s. Disabled means Pay With a Like will not work for this "
+"%s. It takes global settings into account and helps you to check if your "
+"intention will be correctly reflected to the settings after you save."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:755
+msgid "Method"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:759
+#, php-format
+msgid ""
+"Selects the content protection method for this %s. If Follow Global Setting "
+"is selected, method selected in General Settings page will be applied. If "
+"you want to override general settings, select one of the other methods. With "
+"Use Selection Tool you need to select each content using the icon %s on the "
+"editor tool bar. For other methods refer to the settings page."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:763
+msgid "Effective method"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:767
+#, php-format
+msgid ""
+"Effective method dynamically shows the final result of the setting that will "
+"be applied to this %s. It takes global settings into account and helps you "
+"to check if your intention will be correctly reflected to the settings after "
+"you save."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:773
+msgid "Excerpt length"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:777
+#, php-format
+msgid ""
+"If you want to override the number of words that will be used as an excerpt "
+"for the unprotected content, enter it here. Please note that this value is "
+"only used when Automatic Excerpt method is applied to the %s."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:889
+msgid ""
+"To see the full content, share this page by clicking one of the buttons below"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:918
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1034
+msgid "Pay With a Like Settings"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:962
+msgid "<b>[Pay With a Like]</b> Settings saved"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:969
+msgid "<b>[Pay With a Like]</b> You are not authorised to do this."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:978
+msgid ""
+"<b>[Pay With a Like]</b> You didn't select any buttons. Plugin will not "
+"function as expected."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:993
+#, php-format
+msgid ""
+"<b>[Pay With a Like]</b> It looks like you have just installed the plugin. "
+"You may want to adjust some %s. If you are using a cache plugin, please "
+"clear your cache."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:993
+msgid "settings"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1003
+msgid ""
+"<b>[Pay With a Like]</b> As Social Networking scripts cannot access your "
+"local pages, plugin will not function properly in localhost."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1008
+msgid ""
+"<b>[Pay With a Like]</b> Your WPLANG setting in wp-config.php is wrong. "
+"Facebook button will not work."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1029
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1041
+msgid "Global Settings"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1043
+msgid ""
+"Pay With a Like allows protecting posts/pages or parts of posts/pages until "
+"visitor likes the protected content with Facebook, Linkedin, Twitter or "
+"Google +1. These settings provide a quick way to set Pay With a Like for "
+"your posts and pages. They can be overridden per post basis using post "
+"editor page."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1048
+msgid "Activation for posts"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1051
+msgid "Disabled for all posts"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1052
+msgid "Enabled for all posts"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1058
+msgid "Activation for pages"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1061
+msgid "Disabled for all pages"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1062
+msgid "Enabled for all pages"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1074
+msgid "You have the following custom post type(s): "
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1078
+msgid " Note: See the below customization section for details."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1080
+msgid ""
+"You don't have any custom post types. Changing this setting will have no "
+"effect."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1084
+msgid "Activation for custom post types"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1087
+msgid "Disabled for all custom post types"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1088
+msgid "Enabled for all custom post types"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1095
+msgid "Revealed content selection method"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1098
+msgid "Automatic excerpt from the content"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1099
+msgid "Manual excerpt from post excerpt field"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1103
+#, php-format
+msgid ""
+"With this setting, you can select the method that reveals the part of your "
+"contents *before* a Like is clicked. Automatic excerpt selects the first %d "
+"words, number being adjustable from \"excerpt length\" field. Manual excerpt "
+"displays whatever included in the post excerpt field of the post. With "
+"selection tool, you can freely select part(s) of the content to be "
+"protected. Using the latter one may be a little bit sophisticated, but "
+"enables more than one Likes on the same page."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1116
+msgid "Excerpt length (words)"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1118
+msgid ""
+"Number of words of the post content that will be displayed publicly. Only "
+"effective if Automatic excerpt is selected."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1126
+msgid "Accessibility Settings"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1132
+msgid "Enable on the home page"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1135
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1145
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1156
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1167
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1198
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1256
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1276
+msgid "Yes"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1136
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1146
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1157
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1168
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1199
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1257
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1277
+msgid "No"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1142
+msgid "Enable for multiple post pages"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1148
+msgid ""
+"Enables the plugin for pages (except the home page) which contain content "
+"for more that one post/page, e.g. archive, category pages. Some themes use "
+"excerpts here so enabling plugin for these pages may cause strange output. "
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1153
+msgid "Admin sees full content"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1159
+msgid "You may want to select No for test purposes."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1164
+msgid "Authorized users see full content"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1170
+msgid ""
+"If Yes, authorized users will see the full content without the need to like "
+"a content. Authorization level will be revealed after you select yes. Admin "
+"setting is independent of this one."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1182
+msgid "User level where authorization starts"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1185
+msgid "Editor"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1186
+msgid "Author"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1187
+msgid "Contributor"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1188
+msgid "Subscriber"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1190
+msgid ""
+"If the above field is selected as yes, users having a higher level than this "
+"selection will see the full content."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1195
+msgid "Search bots see full content"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1201
+msgid ""
+"You may want to enable this for SEO purposes. Warning: Your full content may "
+"be visible in search engine results."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1206
+msgid "Cookie validity time (hours)"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1208
+msgid ""
+"Validity time of the cookie which lets visitor to be exempt from the "
+"protection after he/she liked. Tip: If you want the cookie to expire at the "
+"end of the session (when the browser is closed), enter zero here."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1216
+msgid "Social Button Settings"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1222
+msgid "Buttons to use"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1234
+msgid "Load scripts for"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1240
+msgid ""
+"If you have other plugins which already use these scripts, duplicate load of "
+"them may create conflict. In that case uncheck related checkbox. If you are "
+"unsure and not having any issues, keep this settings checked."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1247
+msgid "Description above the buttons"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1249
+msgid ""
+"You may want to write something here that will encourage the visitor to "
+"click a button. If you want individual descriptions on post basis, use "
+"Selection Tool method and write description inside the tool."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1253
+msgid "Sitewide Like"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1259
+msgid ""
+"If selected yes, when visitor likes a single content, all protected content "
+"on the website will be revealed to him/her."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1264
+msgid "URL to be liked"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1268
+#, php-format
+msgid ""
+"You can enter a single URL to be liked, e.g. your home page, %s. NOT your "
+"page on the Social Networking Website, e.g. Facebook. If left empty, the "
+"page that button is clicked will be liked."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1273
+msgid "Like Random Page"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1279
+msgid ""
+"If selected yes, a random published page or post on your website will be "
+"selected to be liked. This disables \"URL to be liked\" setting."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1296
+msgid "Save Changes"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1306
+msgid "Basic Statistics"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1353
+msgid "Total likes"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1359
+msgid "likes"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1374
+msgid "Most liked posts"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1393
+msgid "Clear Statistics"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1393
+msgid "Clicking this button deletes statistics saved on the server"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1398
+msgid "Export Statistics"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1398
+msgid ""
+"If you click this button a CSV file including statistics will be saved on "
+"your PC"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1413
+msgid "Customization Instructions"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1416
+msgid ""
+"For protecting html codes that you cannot add to post content, there is a "
+"template function <b>wpmudev_pwal_html</b>. This function replaces all such "
+"codes with like buttons and reveal them when payment is done. Add the "
+"following codes to the page template where you want the html codes to be "
+"displayed and modify as required. Also you need to use the bottom action "
+"function."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1431
+msgid ""
+"Some custom post types use templates which take the post content directly "
+"from the database. For such applications you may need to use "
+"<b>wpmudev_pwal</b> function to manage the content."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1435
+msgid ""
+"Example: Suppose that the content of a post type is displayed like this: "
+"<code>&lt;?php echo custom_description(); ?&gt;</code>. Then edit that part "
+"of the template like this:"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1448
+msgid ""
+"For both of the above usages you <b>must</b> create a function in your "
+"functions.php to call necessary css and js files. Here is an example:"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1467
+#, php-format
+msgid ""
+"If you want to apply your own styles copy contents of front.css to your "
+"theme css file and add this code inside functions.php of your theme:"
+"<code>add_theme_support( \"pay_with_a_like_style\" )</code> OR copy and "
+"rename the default css file <b>%s</b> as <b>%s</b> and edit this latter "
+"file. Then, your edited styles will not be affected from plugin updates."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1478
+msgid "Are you sure to clear statistics?"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1485
+msgid "Statistics cleared..."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1502
+msgid "Statistics could not be deleted"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1510
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1528
+msgid "Nothing to download!"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1613
+msgid "Please enter a value!"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1617
+msgid "Description"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1621
+msgid "Description for this selection."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1629
+msgid "Cancel"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1633
+msgid "Insert"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1776
+#, php-format
+msgid ""
+"Easily get updates, support, and one-click WPMU DEV plugin/theme "
+"installations right from in your dashboard - <strong><a href=\"%s\" title="
+"\"Install Now &raquo;\">install the free WPMU DEV Dashboard plugin</a></"
+"strong>. &nbsp;&nbsp;&nbsp;<small><a href=\"http://premium.wpmudev.org/wpmu-"
+"dev/update-notifications-plugin-information/\">(find out more)</a></small>"
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/pay-with-a-like.php:1780
+#, php-format
+msgid ""
+"Updates, Support, Premium Plugins, Community - <strong><a href=\"%s\" title="
+"\"Activate Now &raquo;\">activate the WPMU DEV Dashboard plugin now</a></"
+"strong>."
+msgstr ""
+
+#: C:\Users\Hakan\Desktop\pay-with-a-like/includes/class_wd_help_tooltips.php:296
+msgid "Help"
+msgstr ""
