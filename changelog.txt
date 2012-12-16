@@ -1,0 +1,28 @@
+V1.1.2:	
+- wpmudev_wpal_html function to protect any html code added
+- Translation base file is now presented as pwal.pot
+- New hooks added
+
+V1.1.1:	
+- Added admin warning if plugin is being used in localhost
+- Added admin warning if WPLANG is wrong
+- Changed priority of the_content filter as 8
+- Broken tags in Automatic mode are now automatically repaired
+- Possibility to have a custom css file outside the plugin directory added
+- css and javascript files are now loaded when necessary
+- Fix for xx_XX-YY type locales
+- Google popup is now hidden by css as default
+		
+V1.1.0: 
+- Support for unlimited protected content on a single page
+- Basic statistics added
+- Possibility to have a custom css file outside the plugin directory added
+- wpmudev_wpal function to be used for custom post type templates added
+- Deprecated message for PHP5.3 fixed
+- Embedded scripts are moved to the footer for W3C and better performance and problems with some themes
+- Improvement of UI in post editor and settings page
+- Fixed setcookie issue when zero or empty value is entered
+		
+V1.0.0: 
+- Initial release
+
