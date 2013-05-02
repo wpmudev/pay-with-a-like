@@ -1,15 +1,23 @@
-.pwal_container{padding:20px;margin:10px;text-align:center;	border: 1px solid #e3e3e3;	border-radius: 3px; height:auto;}
-.pwal_description{font-size:1.2em;font-weight:bold;margin-bottom:1em;}
-.pwal_container ul{list-style:none;overflow:hidden;margin:auto;}
-.pwal_container ul li{float:left;list-style-type:none !important;}
-.pwal_list_item_1 {width:100%}
-.pwal_list_item_2 {width:50%}
-.pwal_list_item_3 {width:33%}
-.pwal_list_item_4 {width:25%}
-.pwal_list_item_5 {width:20%}
-.pwal_list_item_6 {width:16%}
+.pwal_container { padding: 20px; margin: 10px; text-align: center; border: 1px solid #e3e3e3; border-radius: 3px; height: auto; }
+.pwal_container .pwal_description { font-size:1.2em; font-weight:bold; margin-bottom: 1em; }
+.pwal_container ul { list-style: none; overflow: hidden; margin: auto; }
+.pwal_container ul li{ float: left; list-style-type: none !important; margin: 0; }
+.pwal_container .pwal_list_item_1 { width: 100%; }
+.pwal_container .pwal_list_item_2 { width: 50%; }
+.pwal_container .pwal_list_item_3 { width: 33%; }
+.pwal_container .pwal_list_item_4 { width: 25%; }
+.pwal_container .pwal_list_item_5 { width: 20%; }
+.pwal_container .pwal_list_item_6 { width: 16%; }
+
 /* If you want Facebook comments to be added by your visitor, remove the following line. 
 For correct display, you may need to change other css properties too*/
-.fb_edge_widget_with_comment span.fb_edge_comment_widget iframe.fb_ltr {display: none !important;}
+.pwal_container .pwal_facebook_button .fb_edge_widget_with_comment iframe.fb_iframe_widget_lift {
+	display: none !important; 
+	margin-left: -999em !important;
+}
+/* .fb_edge_widget_with_comment span.fb_edge_comment_widget iframe.fb_ltr {display: none !important;} */
+
 /* Hiding Google pop-up. As G+ does not wait, removing this line will not give any pratical result */
-.gc-bubbleDefault.pls-container{display:none !important;}
+.pwal_container .gc-bubbleDefault.pls-container{display:none !important;}
+
+
