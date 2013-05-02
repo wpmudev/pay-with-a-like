@@ -31,7 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // Support for WPMU DEV Dashboard plugin
 include_once( dirname(__FILE__) .'/lib/dash-notices/wpmudev-dash-notification.php');
 
-include_once( dirname(__FILE__) .'pwal-uninstall.php');
+include_once( dirname(__FILE__) .'/pwal-uninstall.php');
 
 register_uninstall_hook(  __FILE__ , "pwal_uninstall" );
 register_activation_hook( __FILE__, array('PayWithaLike', 'install') );
