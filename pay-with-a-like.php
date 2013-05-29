@@ -3,8 +3,8 @@
 Plugin Name: Pay With a Like
 Description: Allows protecting posts/pages until visitor likes the page or parts of the page with Facebook, Linkedin, Twitter or Google +1.
 Plugin URI: http://premium.wpmudev.org/project/pay-with-a-like
-Version: 1.1.3
-Author: Hakan Evin (Incsub)
+Version: 1.1.4
+Author: Paul Menard (Incsub), Hakan Evin (Incsub)
 Author URI: http://premium.wpmudev.org/
 TextDomain: pwal
 Domain Path: /languages/
@@ -164,17 +164,18 @@ class PayWithaLike {
 	 */	
 	function is_authorised() {
 	
+		$is_authorised_return = false;
 		if ( $this->options['authorized'] == 'true' && is_user_logged_in() && !current_user_can('administrator') ) {
 			if ( $this->options['level'] == 'subscriber' && current_user_can( 'read' ) )
-				return true;
+				$is_authorised_return = true;
 			else if ( $this->options['level'] == 'contributor' && current_user_can( 'edit_posts' ) )
-				return true;
+				$is_authorised_return = true;
 			else if ( $this->options['level'] == 'author' && current_user_can( 'edit_published_posts' ) )
-				return true;		
+				$is_authorised_return = true;		
 			else if ( $this->options['level'] == 'editor' && current_user_can( 'edit_others_posts' ) )
-				return true;		
+				$is_authorised_return = true;		
 		}
-		return false;
+		return apply_filters('pwal_is_authorized', $is_authorised_return);
 	}
 
 	/**
