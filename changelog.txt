@@ -1,3 +1,13 @@
+V1.1.5: 2013-07-26
+- Fixed issue with Facebook API change. 
+- Added logic to determine if Facebook like was from other like button and not PWAL. Will be ignored.
+- Added better support for multi post home and archive pages when using 'URL to be like' setting.
+- Added some CSS for list item margins/paddings on PWAL buttons to have more consistent layout.
+- Moved all inline JavaScript to external file. Less repeating code as well as IDs.
+- Added new global setting to allow wait on Facebook comment popup before reloading page. 
+- Added URL parameter PWAL_DEBUG to allow debug via JS console log of click actions without setting final cookie.
+- Cleanup some of the settings label to make the option details clearer.
+
 V1.1.4: 2013-05-29
 - Added filter 'pwal_is_authorized' to allow external override
 

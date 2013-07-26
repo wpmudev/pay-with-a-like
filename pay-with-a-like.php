@@ -3,7 +3,7 @@
 Plugin Name: Pay With a Like
 Description: Allows protecting posts/pages until visitor likes the page or parts of the page with Facebook, Linkedin, Twitter or Google +1.
 Plugin URI: http://premium.wpmudev.org/project/pay-with-a-like
-Version: 1.1.4
+Version: 1.1.5
 Author: Paul Menard (Incsub), Hakan Evin (Incsub)
 Author URI: http://premium.wpmudev.org/
 TextDomain: pwal
@@ -40,8 +40,9 @@ if ( !class_exists( 'PayWithaLike' ) ) {
 
 class PayWithaLike {
 
-	var $version="1.1.3";
-
+	var $version="1.1.5";
+	var $pwal_js_data = array();
+	
 	/**
      * Constructor
      */
@@ -58,6 +59,10 @@ class PayWithaLike {
 		// Read all options at once
 		$this->options = get_option( 'pwal_options' );
 		$this->options['salt'] = get_option( 'pay_with_a_like_salt' );
+		
+		$this->pwal_js_data['debug'] 		= "false";
+		if (isset($_GET['PWAL_DEBUG']))
+			$this->pwal_js_data['debug'] 		= "true";
 		
 		add_action( 'template_redirect', array(&$this, 'cachable'), 1 );		// Check if page can be cached
 		add_action( 'plugins_loaded', array(&$this, 'localization') );			// Localize the plugin
@@ -82,11 +87,18 @@ class PayWithaLike {
 		add_action( 'wp_ajax_pwal_export_stats', array( &$this, 'export_stats' ) ); // Export statistics
 		add_action( 'admin_print_scripts-'. $this->page , array(&$this,'admin_scripts'));
 		
+		add_action( 'wp_enqueue_scripts', array(&$this, 'wp_enqueue_scripts') );
 		
 		// By default assume that pages are cachable (Cache plugins are allowed)
 		$this->is_cachable = true;
 		$this->script_added = false;
 		$this->footer_script = "";
+	}
+
+	function wp_enqueue_scripts() {
+		if (!is_admin()) {
+			wp_enqueue_script( 'pay-with-a-like-js', plugins_url('/js/pay-with-a-like.js', __FILE__), array('jquery'), $this->version, true);
+		}
 	}
 
 	/**
@@ -118,17 +130,22 @@ class PayWithaLike {
 	 */
 	function load_scripts_styles() {
 		
+		wp_enqueue_script('jquery');
+		
 		if ( $this->options["use_facebook"] && $this->options["load_facebook"] ) {
-				$locale = preg_replace('/-/', '_', get_locale());
-				// Fix for de_DE_Sie type locale
-				if ( substr_count( $locale, '_' ) > 1 ) {
-					$l = explode( '_', $locale );
-					$locale = $l[0] . '_' . $l[1];
-				}
-				$locale = apply_filters( 'pwal_fb_locale', $locale );
-				wp_enqueue_script('facebook-all', 'http://connect.facebook.net/' . $locale . '/all.js', array( 'jquery' ) );
-				add_action('wp_footer', array(&$this, 'init_fb_script'));
+			$locale = preg_replace('/-/', '_', get_locale());
+			
+			// Fix for de_DE_Sie type locale
+			if ( substr_count( $locale, '_' ) > 1 ) {
+				$l = explode( '_', $locale );
+				$locale = $l[0] . '_' . $l[1];
 			}
+			$locale = apply_filters( 'pwal_fb_locale', $locale );
+			wp_enqueue_script('facebook-all', 'http://connect.facebook.net/' . $locale . '/all.js', array( 'jquery' ) );
+			//$this->pwal_js_data['facebook-all-js'] = '//connect.facebook.net/' . $locale . '/all.js&status=0';
+				
+			//add_action('wp_footer', array(&$this, 'init_fb_script'));
+		}
 		if ( $this->options["use_linkedin"] && $this->options["load_linkedin"] )
 			wp_enqueue_script( 'linkedin', 'http://platform.linkedin.com/in.js', array( 'jquery' ) );
 		
@@ -262,6 +279,11 @@ EOFb;
 		$method = get_post_meta( $post->ID, 'pwal_method', true );
 		if ( $method == "" )
 			$method = $this->options["method"]; // Apply default method, if there is none
+		
+		// FPM DEBUG
+		//if ((isset($_GET['PWAL_RESET'])) && (isset($_COOKIE["pay_with_a_like"]))) {
+		//	unset($_COOKIE["pay_with_a_like"]);
+		//}
 			
 		// If user liked, show content. 'Tool' option has its own logic
 		if ( isset( $_COOKIE["pay_with_a_like"] ) && $method != 'tool' ) {
@@ -322,11 +344,13 @@ EOFb;
 				if ( !$found )
 					$e = $e_saved;
 			}
-				
-			return $e . $this->render_buttons( );
+			//echo "post method[". 'automatic' ."] ID[". $post->ID ."]<br />";	
+			return $e . $this->render_buttons( $post->ID );
 		}
 		else if ( $method == "manual" ) {
-			return $post->post_excerpt . $this->render_buttons( );
+			//echo "post method[". 'manual' ."] ID[". $post->ID ."]<br />";	
+			
+			return $post->post_excerpt . $this->render_buttons( $post->ID );
 		}
 		else if ( $method == "tool" ) {
 			$contents = array();
@@ -356,6 +380,8 @@ EOFb;
 						$content = apply_filters( 'pwal_revealed_content', $content );
 					}
 					else {
+						//echo "post method[". 'tool' ."] ID[". $m[2] ."] desc[". $m[4] ."]<br />";	
+						
 						$content = str_replace( $m[0], $this->render_buttons( $m[2],$m[4] ), $content );
 						$content = apply_filters( 'pwal_hidden_content', $content ); 
 					}
@@ -429,82 +455,36 @@ EOFb;
 		if ( trim( $description ) == '' )
 			$description = $this->options["description"]; // Use default description, if one is not specifically set
 		
-		$content  = "<div class='pwal_container'>";
+		$content  = "<div class='pwal_container' id='pwal_container_".$id."'>";
 		if ( $description )
 			$content .= "<div class='pwal_description'>". $description . "</div>";
 		$content .= "<ul>";
 		$script   = "";
-		if ( !$this->script_added )
-			$script  .= "var pwal_data={'ajax_url': '".admin_url('admin-ajax.php')."'};
-						jQuery(document).bind('pwal_button_action', function (e, service,cid) {
-							jQuery.post(pwal_data.ajax_url, {
-								'action': 'pwal_action',
-								'post_id':".$post->ID.",
-								'content_id':cid,
-								'service': service,
-								'nonce': '".wp_create_nonce("ajax-nonce")."'
-							}, function (data) {
-								if ( data && data.error ) {alert(data.error);}
-								else{window.location.href = window.location.href;}
-							},
-							'json'
-							);
-						});
-					";
-					
+
 		if ( $this->options["use_facebook"] ) {
-			$content .= "<li class='pwal_list_item_".$n."'><div class='pwal_button pwal_facebook_button'><fb:like id='pwal_".$id."' layout='box_count' href='{$url_to_like}'></fb:like></div></li>";
-			if ( !$this->script_added )
-				$script  .= "function pwal_facebook_callback(){
-							jQuery(document).trigger('pwal_button_action',['facebook',cid]);
-						}
-						function pwal_facebook_register(){
-							if (typeof FB !='undefined') {
-								FB.Event.subscribe('edge.create',function(href,widget){
-									var did=widget.dom.id;
-									var cid=did.replace('pwal_','');
-									jQuery(document).trigger('pwal_button_action',['facebook',cid]);
-								});
-							}
-							else setTimeout(pwal_facebook_register,200);
-						}
-						pwal_facebook_register();
-						";
+			$content .= "<li class='pwal_list_item_".$n."'><div class='pwal_button pwal_facebook_button'><fb:like ref='pwal_facebook_".$id."' class='pwal_facebook_iframe' id='pwal_facebook_".$id."' data-width='250px' layout='box_count' href='{$url_to_like}'></fb:like></div></li>";
 		}
+		
 		if ( $this->options["use_linkedin"] ) {
-			$content .= "<li class='pwal_list_item_".$n."'><div class='pwal_button pwal_linkedin_button'><script type='IN/Share' data-counter='top' data-url='{$url_to_like}' data-onsuccess='pwal_linkedin_callback_".$id."'></script></div></li>";
-			$script  .= "function pwal_linkedin_callback_".$id."() {
-							jQuery(document).trigger('pwal_button_action',['linkedin',".$id."]);
-						}
-						";
+			$content .= "<li class='pwal_list_item_".$n."'><div class='pwal_button pwal_linkedin_button'><script type='IN/Share' data-counter='top' data-url='{$url_to_like}' data-onsuccess='pwal_linkedin_callback_".$id."'></script><script type='text/javascript'>function pwal_linkedin_callback_".$id."(){ wpmudev_pwal.setup_linkedin_js('".$id."'); } </script></div></li>";
 		}
 		if ( $this->options["use_twitter"] ) {
-			$content .= "<li class='pwal_list_item_".$n."'><div class='pwal_button pwal_twitter_button' id='pwal_".$id."' ><a href='https://twitter.com/share' class='twitter-share-button' data-count='vertical' data-url='{$url_to_like}'>Tweet</a></div></li>";
-			if ( !$this->script_added )
-			$script  .= "twttr.ready(function(twttr) {
-							twttr.events.bind('tweet',function(event){
-							var did=event.target.parentNode.id;
-							var cid=did.replace('pwal_','');
-							jQuery(document).trigger('pwal_button_action',['twitter',cid]);
-						});
-						});
-						";
+			$content .= "<li class='pwal_list_item_".$n."'><div class='pwal_button pwal_twitter_button' id='pwal_twitter_".$id."' data-url='{$url_to_like}' ><a href='https://twitter.com/share' class='twitter-share-button' data-count='vertical' data-url='{$url_to_like}'>Tweet</a></div></li>";
 		}
 		if ( $this->options["use_google"] ) {
-			$content .= "<li class='pwal_list_item_".$n."'><div class='pwal_button pwal_google_button'><g:plusone size='tall' href='{$url_to_like}' callback='pwal_google_callback_".$id."'></g:plusone></div></li>";
-			$script  .= "function pwal_google_callback_".$id."(data){
-							if (data.state == 'off'){return false;}
-							jQuery(document).trigger('pwal_button_action',['google',".$id."]);
-						}";
+			$content .= "<li class='pwal_list_item_".$n."'><div class='pwal_button pwal_google_button'><g:plusone size='tall' href='". $url_to_like ."' callback='pwal_google_callback_".$id."'></g:plusone></div><script type='text/javascript'> function pwal_google_callback_".$id."(data){ wpmudev_pwal.setup_google_plus_js('".$id."', data); } </script></li>";
 		}
+		$script  .= " wpmudev_pwal.register_button_href('".$id."', '". $post->ID ."','".$url_to_like."'); ";
+
 		$content = apply_filters( "pwal_render_button_html", $content, $post->ID );
 		$script  = apply_filters( "pwal_render_button_script", $script, $post->ID );
+
 		$content .= "</ul></div>";
 		
 		// Flag that we have already included some common scripts
 		$this->script_added = true;
 		// Save scripts to be added to the footer 
-		$this->footer_script = $this->footer_script . $script;
+		$this->footer_script .= $script;
 		
 		return $content;
 	}
@@ -513,7 +493,21 @@ EOFb;
 	 *	Add embedded scripts to the footer and compress them
 	 */	
 	function footer() {
-		echo "<script type='text/javascript'>". str_replace( array("\r","\n","\t","<br>","<br />"), "", apply_filters( 'pwal_footer_scripts', $this->footer_script ) ). "</script>";
+		$this->pwal_js_data['options'] 		= $this->options;
+		$this->pwal_js_data['ajax_url'] 	= admin_url('admin-ajax.php');
+		$this->pwal_js_data['buttons'] 		= array();
+		$this->pwal_js_data['ajax-nonce']	= wp_create_nonce("ajax-nonce");
+		$this->pwal_js_data['is_cachable']	= $this->is_cachable;
+		
+		wp_localize_script('pay-with-a-like-js', 'pwal_data', $this->pwal_js_data);
+		echo "<script type='text/javascript'>jQuery(document).ready(function($) { ". $this->footer_script. " }); </script>";
+		wp_print_scripts('pay-with-a-like-js');
+		
+		//if ( isset( $_COOKIE["pay_with_a_like"] ) )
+		//	$likes = unserialize( stripslashes( $_COOKIE["pay_with_a_like"] ) );
+		//else
+		//	$likes = '';
+		//echo "likes<pre>"; print_r($likes); echo "</pre>";
 	}
 	
 	/**
@@ -775,7 +769,7 @@ EOFb;
 		
 		echo '<input type="text" name="pwal_excerpt" id="pwal_excerpt" value="'.get_post_meta( $post->ID, 'pwal_excerpt', true ).'" />';
 		echo '<label for="pwal_excerpt">';
-		_e('Excerpt length', 'pwal');
+		_e('Excerpt length (words)', 'pwal');
 		echo '</label>';
 		echo '<div class="pwal_info">';
 		/* translators: %s refer to post or page */
@@ -897,7 +891,8 @@ EOFb;
 										'load_facebook'				=> 'true',
 										'load_linkedin'				=> 'true',
 										'load_twitter'				=> 'true',
-										'load_google'				=> 'true'
+										'load_google'				=> 'true',
+										'show_facebook_comment_popup' => 'false'
 										)
 		);
 		
@@ -928,30 +923,31 @@ EOFb;
 		}
 		
 		if ( isset($_POST["action_pwal"]) ) {
-			$this->options["post_default"]			= $_POST["post_default"];
-			$this->options["page_default"]			= $_POST["page_default"];
-			$this->options["custom_default"]		= $_POST["custom_default"];
-			$this->options["method"]				= $_POST["pwal_method"];
-			$this->options["excerpt"]				= $_POST["excerpt"];
-			$this->options["home"]					= $_POST["home"];
-			$this->options["multi"]					= $_POST["multi"];
-			$this->options["admin"]					= $_POST["admin"];
-			$this->options["authorized"]			= $_POST["authorized"];
-			$this->options["level"]					= $_POST["level"];
-			$this->options["bot"]					= $_POST["bot"];
-			$this->options["cookie"]				= $_POST["cookie"];
-			$this->options['use_facebook']			= $this->checkbox_value('use_facebook');
-			$this->options['use_linkedin']			= $this->checkbox_value('use_linkedin');
-			$this->options['use_twitter']			= $this->checkbox_value('use_twitter');
-			$this->options['use_google']			= $this->checkbox_value('use_google');
-			$this->options["sitewide"]				= $_POST["sitewide"];
-			$this->options["description"]			= stripslashes( $_POST["description"] );
-			$this->options["url_to_like"]			= $_POST["url_to_like"];
-			$this->options["random"]				= $_POST["random"];
-			$this->options['load_facebook']			= $this->checkbox_value('load_facebook');
-			$this->options['load_linkedin']			= $this->checkbox_value('load_linkedin');
-			$this->options['load_twitter']			= $this->checkbox_value('load_twitter');
-			$this->options['load_google']			= $this->checkbox_value('load_google');
+			$this->options["post_default"]					= $_POST["post_default"];
+			$this->options["page_default"]					= $_POST["page_default"];
+			$this->options["custom_default"]				= $_POST["custom_default"];
+			$this->options["method"]						= $_POST["pwal_method"];
+			$this->options["excerpt"]						= $_POST["excerpt"];
+			$this->options["home"]							= $_POST["home"];
+			$this->options["multi"]							= $_POST["multi"];
+			$this->options["admin"]							= $_POST["admin"];
+			$this->options["authorized"]					= $_POST["authorized"];
+			$this->options["level"]							= $_POST["level"];
+			$this->options["bot"]							= $_POST["bot"];
+			$this->options["cookie"]						= $_POST["cookie"];
+			$this->options['use_facebook']					= $this->checkbox_value('use_facebook');
+			$this->options['use_linkedin']					= $this->checkbox_value('use_linkedin');
+			$this->options['use_twitter']					= $this->checkbox_value('use_twitter');
+			$this->options['use_google']					= $this->checkbox_value('use_google');
+			$this->options["sitewide"]						= $_POST["sitewide"];
+			$this->options["description"]					= stripslashes( $_POST["description"] );
+			$this->options["url_to_like"]					= $_POST["url_to_like"];
+			$this->options["random"]						= $_POST["random"];
+			$this->options['load_facebook']					= $this->checkbox_value('load_facebook');
+			$this->options['load_linkedin']					= $this->checkbox_value('load_linkedin');
+			$this->options['load_twitter']					= $this->checkbox_value('load_twitter');
+			$this->options['load_google']					= $this->checkbox_value('load_google');
+			$this->options['show_facebook_comment_popup']	= $this->checkbox_value('show_facebook_comment_popup');
 			
 			$this->options = apply_filters("pwal_before_save_options", $this->options);
 			
@@ -1074,24 +1070,36 @@ EOFb;
 						'_builtin' => false
 					); 
 					$post_types = get_post_types( $args, 'objects' );
-
+					$_has_post_types = false;
+					
 					if ( is_array( $post_types ) && count( $post_types ) > 0 ) {
 						$note = __("You have the following custom post type(s): ","pwal");
 							foreach ( $post_types as $post_type )
-								$note .= $post_type->labels->name . ", ";
+								$note .= "<strong>". $post_type->labels->name . "</strong>, ";
 						$note = rtrim( $note, ", " );
-						$note .= __(' Note: See the below customization section for details.','pwal');
+						$note .= __('<br />Note: See the below customization section for details.','pwal');
+						$_has_post_types = true;
+					} else {
+						$note = __("You don't have any custom post types.","pwal");
 					}
-					else $note = __("You don't have any custom post types. Changing this setting will have no effect.","pwal");
 					?>
 					
 					<tr valign="top">
 						<th scope="row" ><?php _e('Activation for custom post types', 'pwal')?></th>
 						<td colspan="2">
-						<select name="custom_default">
-						<option value="" <?php if ( $this->options['custom_default'] <> 'enable' ) echo "selected='selected'"?>><?php _e('Disabled for all custom post types', 'pwal')?></option>
-						<option value="enable" <?php if ( $this->options['custom_default'] == 'enable' ) echo "selected='selected'"?>><?php _e('Enabled for all custom post types', 'pwal')?></option>
-						</select>
+
+							<?php if ($_has_post_types == true) { ?>
+
+								<select name="custom_default">
+									<option value="" <?php if ( $this->options['custom_default'] <> 'enable' ) echo "selected='selected'"?>><?php 
+										_e('Disabled for all custom post types', 'pwal')?></option>
+									<option value="enable" <?php if ( $this->options['custom_default'] == 'enable' ) echo "selected='selected'"?>><?php 
+										_e('Enabled for all custom post types', 'pwal')?></option>
+								</select>
+							<?php } else {
+								?><input type="hidden" name="custom_default" value="" /><?php
+							}?>
+								
 						<span class="description"><?php echo $note ?></span>
 						</td>
 					</tr>
@@ -1137,9 +1145,10 @@ EOFb;
 						<th scope="row" ><?php _e('Enable on the home page', 'pwal') ?></th>
 						<td colspan="2">
 						<select name="home">
-						<option value="true" <?php if ( $this->options['home'] == 'true' ) echo "selected='selected'"?> ><?php _e('Yes','pwal')?></option>
-						<option value="" <?php if ( $this->options['home'] <> 'true' ) echo "selected='selected'"?>><?php _e('No','pwal')?></option>
+						<option value="true" <?php if ( $this->options['home'] == 'true' ) echo "selected='selected'"?> ><?php _e('Yes, show buttons','pwal')?></option>
+						<option value="" <?php if ( $this->options['home'] <> 'true' ) echo "selected='selected'"?>><?php _e('No, show full content','pwal')?></option>
 						</select>
+						<span class="description"><?php _e('Enables the plugin for the home page. If you are displaying latest posts or some similar category archive enabling this will show the buttons on each posts. If this option is not enabled the full content will be shown. If you are instead showing a static page you will control the buttons via that page form. Some themes use excerpts here so enabling plugin for these pages may cause strange output.', 'pwal')?></span>
 						</td>
 					</tr>
 					
@@ -1147,8 +1156,8 @@ EOFb;
 						<th scope="row" ><?php _e('Enable for multiple post pages', 'pwal') ?></th>
 						<td colspan="2">
 						<select name="multi">
-						<option value="true" <?php if ( $this->options['multi'] == 'true' ) echo "selected='selected'"?> ><?php _e('Yes','pwal')?></option>
-						<option value="" <?php if ( $this->options['multi'] <> 'true' ) echo "selected='selected'"?>><?php _e('No','pwal')?></option>
+						<option value="true" <?php if ( $this->options['multi'] == 'true' ) echo "selected='selected'"?> ><?php _e('Yes, show buttons','pwal')?></option>
+						<option value="" <?php if ( $this->options['multi'] <> 'true' ) echo "selected='selected'"?>><?php _e('No, show full content','pwal')?></option>
 						</select>
 						<span class="description"><?php _e('Enables the plugin for pages (except the home page) which contain content for more that one post/page, e.g. archive, category pages. Some themes use excerpts here so enabling plugin for these pages may cause strange output. ', 'pwal')?></span>
 						</td>
@@ -1247,6 +1256,11 @@ EOFb;
 						do_action("pwal_additional_script_settings");
 						?>
 						</td>
+					</tr>
+					<tr valign="top">
+						<th scope="row" ><?php _e('Facebook Comment popup', 'pwal') ?></th>
+						<td colspan="2"><input type="checkbox" name="show_facebook_comment_popup" value="true" <?php if ($this->options["show_facebook_comment_popup"]) echo "checked='checked'"?>>&nbsp<?php _e('Wait for optional Facebook Comment popup on Facebook Like (Check for yes)', 'pwal'); ?>
+						<br /><span class="description"><?php _e('If enabled, when the user clicks the like button Facebook will display a popup comment form. The PWAL process will wait until the user submits the form before reloading the page to show full content. If not enabled the form will submit after clicking the Facebook like buton.', 'pwal') ?></span></td>
 					</tr>
 					<tr valign="top">
 						<th scope="row" ><?php _e('Description above the buttons', 'pwal') ?></th>
@@ -1720,71 +1734,4 @@ if ( !function_exists( 'wpmudev_pwal_html' ) ) {
 			
 		return $pwal->content( '[pwal id="'.$id.'" description="'.$description.'"]'. $content . '[/pwal]', true, 'tool' );
 	}
-}
-
-
-///////////////////////////////////////////////////////////////////////////
-/* -------------------- WPMU DEV Dashboard Notice -------------------- */
-if ( !class_exists('WPMUDEV_Dashboard_Notice') ) {
-	class WPMUDEV_Dashboard_Notice {
-		
-		var $version = '2.0';
-		
-		function WPMUDEV_Dashboard_Notice() {
-			add_action( 'plugins_loaded', array( &$this, 'init' ) ); 
-		}
-		
-		function init() {
-			if ( !class_exists( 'WPMUDEV_Update_Notifications' ) && current_user_can( 'install_plugins' ) && is_admin() ) {
-				remove_action( 'admin_notices', 'wdp_un_check', 5 );
-				remove_action( 'network_admin_notices', 'wdp_un_check', 5 );
-				if ( file_exists(WP_PLUGIN_DIR . '/wpmudev-updates/update-notifications.php') ) {
-					add_action( 'all_admin_notices', array( &$this, 'activate_notice' ), 5 );
-				} else {
-					add_action( 'all_admin_notices', array( &$this, 'install_notice' ), 5 );
-					add_filter( 'plugins_api', array( &$this, 'filter_plugin_info' ), 10, 3 );
-				}
-			}
-		}
-		
-		function filter_plugin_info($res, $action, $args) {
-			global $wp_version;
-			$cur_wp_version = preg_replace('/-.*$/', '', $wp_version);
-		
-			if ( $action == 'plugin_information' && strpos($args->slug, 'install_wpmudev_dash') !== false ) {
-				$res = new stdClass;
-				$res->name = 'WPMU DEV Dashboard';
-				$res->slug = 'wpmu-dev-dashboard';
-				$res->version = '';
-				$res->rating = 100;
-				$res->homepage = 'http://premium.wpmudev.org/project/wpmu-dev-dashboard/';
-				$res->download_link = "http://premium.wpmudev.org/wdp-un.php?action=install_wpmudev_dash";
-				$res->tested = $cur_wp_version;
-				
-				return $res;
-			}
-	
-			return false;
-		}
-	
-		function auto_install_url() {
-			$function = is_multisite() ? 'network_admin_url' : 'admin_url';
-			return wp_nonce_url($function("update.php?action=install-plugin&plugin=install_wpmudev_dash"), "install-plugin_install_wpmudev_dash");
-		}
-		
-		function activate_url() {
-			$function = is_multisite() ? 'network_admin_url' : 'admin_url';
-			return wp_nonce_url($function('plugins.php?action=activate&plugin=wpmudev-updates%2Fupdate-notifications.php'), 'activate-plugin_wpmudev-updates/update-notifications.php');
-		}
-		
-		function install_notice() {
-			echo '<div class="error fade"><p>' . sprintf(__('Easily get updates, support, and one-click WPMU DEV plugin/theme installations right from in your dashboard - <strong><a href="%s" title="Install Now &raquo;">install the free WPMU DEV Dashboard plugin</a></strong>. &nbsp;&nbsp;&nbsp;<small><a href="http://premium.wpmudev.org/wpmu-dev/update-notifications-plugin-information/">(find out more)</a></small>', 'wpmudev'), $this->auto_install_url()) . '</a></p></div>';
-		}
-		
-		function activate_notice() {
-			echo '<div class="updated fade"><p>' . sprintf(__('Updates, Support, Premium Plugins, Community - <strong><a href="%s" title="Activate Now &raquo;">activate the WPMU DEV Dashboard plugin now</a></strong>.', 'wpmudev'), $this->activate_url()) . '</a></p></div>';
-		}
-	
-	}
-	new WPMUDEV_Dashboard_Notice();
 }
