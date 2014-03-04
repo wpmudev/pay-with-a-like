@@ -1,0 +1,255 @@
+div#affdashgraph-wrapper {
+	margin-top: 10px; 
+	background: #FFFFFF; 
+	padding: 15px; 
+	width: 96%;
+}
+
+div#affdashgraph-wrapper div#affdashgraph {
+	width: 100%; 
+	padding: 0px; 
+	margin-top: 20px; 
+	min-height: 350px; 
+	background-color: #fff; 
+	margin-bottom: 20px;
+}
+
+#poststuff.pwal-settings input[type="text"] {
+	width: 90%;
+}
+
+#poststuff.pwal-settings ul#pwal-use-buttons,
+#poststuff.pwal-settings ul#pwal-load-scripts {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#poststuff.pwal-settings ul#pwal-use-buttons li,
+#poststuff.pwal-settings ul#pwal-load-scripts li {
+	margin: 0 10px 0 0;
+	padding: 0;
+	list-style: none;
+	float: left;
+}
+
+#poststuff.pwal-settings ul#pwal-use-buttons li label,
+#poststuff.pwal-settings ul#pwal-load-scripts li label {
+	margin-left: 5px;
+}
+
+
+#poststuff.pwal-settings ul.pwal-facebook-stlye-options {
+	width: 100%;
+}
+
+#poststuff.pwal-settings ul.pwal-facebook-stlye-options li {
+	float:left;
+	height: 120px;
+	margin-right: 30px;
+}
+
+#poststuff.pwal-settings ul.pwal-twitter-stlye-options li {
+	float:left;
+	height: 120px;
+	margin-right: 30px;
+}
+
+#poststuff.pwal-settings textarea#pwal_twitter_message {
+	width: 70%;
+	height: 150px;
+}
+
+#poststuff.pwal-settings ul.pwal-linkedin-stlye-options li {
+	float:left;
+	height: 120px;
+	margin-right: 30px;
+}
+
+#poststuff.pwal-settings ul.pwal-google-stlye-options li {
+	float:left;
+	height: 120px;
+	margin-right: 30px;
+}
+
+
+ul#pwal-social-buttons {
+    list-style-type: none;
+/*    margin: 0 auto; */
+    padding: 0;
+    width: 400px;
+}
+
+ul#pwal-social-buttons li.pwal-social-button {
+    border: 1px solid #666666;
+    cursor: move;
+    height: 65px;
+    margin: 0 3px 3px;
+    padding: 0.4em;
+}
+
+ul#pwal-social-buttons li.pwal-social-button span.pwal-social-button-title {
+	float: left;
+	width: 125px;
+}
+
+ul#pwal-social-buttons li.pwal-social-button span.pwal-social-button-image {
+	float: left;
+	width: 100px;
+}
+
+ul#pwal-social-buttons li.pwal-social-button span#pwal-social-button-image-facebook {
+	background: url("../images/fb_like_box_count.png") no-repeat scroll 50% 0 rgba(0, 0, 0, 0);
+	height: 65px;
+	text-indent: -999em;
+}
+
+ul#pwal-social-buttons li.pwal-social-button span#pwal-social-button-image-google {
+	background: url("../images/google_like_button_tall_bubble.png") no-repeat scroll 50% 0 rgba(0, 0, 0, 0);
+	height: 65px;
+	text-indent: -999em;
+}
+
+ul#pwal-social-buttons li.pwal-social-button span#pwal-social-button-image-linkedin {
+	background: url("../images/linkedin_like_button_vertical.png") no-repeat scroll 50% 0 rgba(0, 0, 0, 0);
+	height: 65px;
+	text-indent: -999em;
+}
+
+ul#pwal-social-buttons li span#pwal-social-button-image-twitter {
+	background: url("../images/twitter_like_button_vertical.png") no-repeat scroll 50% 0 rgba(0, 0, 0, 0);
+	height: 65px;
+	text-indent: -999em;
+}
+
+
+
+
+ul#pwal-social-buttons li.pwal-social-button span.pwal-social-button-section {
+	margin: 0 10px;
+}
+
+ul#pwal-post-types {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+ul#pwal-post-types span.pwal-post-type-label {
+	font-size: 1.1em;
+	
+}
+ul#pwal-post-types li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+ul#pwal-post-types li ul {
+	margin: 0 0 10px 10px;
+	padding: 0;
+	list-style: none;
+}
+
+
+#pwal_metabox {
+	
+}
+
+#pwal_metabox.postbox select,
+#pwal_metabox.postbox input[type="text"] { 
+	width: 90%;
+}
+
+#pwal_metabox.postbox textarea {
+	width: 90%; 
+	height: 50px;
+}
+
+table#pwal-facebook-fan-page-listing {
+	width: 100%;
+}
+
+
+table#pwal-facebook-fan-page-listing th.column-pwal-facebook-page-action {
+	width: 2%;
+}
+
+table#pwal-facebook-fan-page-listing th.column-pwal-facebook-page-info {
+	text-align: left;
+	width: 98%;
+}
+
+table#pwal-facebook-fan-page-listing td {
+	padding: 0;
+}
+
+
+table#pwal-facebook-fan-page-listing td.column-pwal-facebook-page-info div.pwal-fan-page-image {
+	float: left;
+	margin: 0px 10px 10px 10px;
+}
+
+table#pwal-facebook-fan-page-listing td.column-pwal-facebook-page-info div.pwal-fan-page-name {
+	font-size: 1.1em;
+	font-weight: bold;
+}
+
+table#pwal-facebook-fan-page-listing td.column-pwal-facebook-page-info div.pwal-fan-page-url,
+table#pwal-facebook-fan-page-listing td.column-pwal-facebook-page-info div.pwal-fan-page-id {
+	font-size: 0.9em;
+	font-weight: normal;
+	
+}
+
+table#pwal-facebook-fan-page-listing td.column-pwal-facebook-page-info div.pwal-fan-page-url .pwal-label,
+table#pwal-facebook-fan-page-listing td.column-pwal-facebook-page-info div.pwal-fan-page-id .pwal-label {
+	font-weight: bold;	
+}
+
+table#pwal-facebook-fan-page-listing input[type="text"] {
+	width: 90%;
+	margin-left: 10px;
+}
+
+.pwal_wrap .pwal-settings button.pwal-facebook-fan-page-new {
+	display:none;
+}
+
+.pwal_wrap .pwal-settings ul#pwal_method_options {
+	margin: 0 60px 0 0;
+}
+
+.pwal_wrap .pwal-settings ul#pwal_method_options li {
+	margin: 10px 0;
+}
+
+.pwal_wrap .pwal-settings table#pwal-statistics-summary,
+.pwal_wrap .pwal-settings table#pwal-statistics-toppages,
+.pwal_wrap .pwal-settings table#pwal-statistics-ip-addesses {
+	width: 100%;
+	padding: 5px;
+}
+
+.pwal_wrap .pwal-settings table#pwal-statistics-summary thead th,
+.pwal_wrap .pwal-settings table#pwal-statistics-toppages thead th,
+.pwal_wrap .pwal-settings table#pwal-statistics-ip-addesses {
+	background-color: #F1F1F1;
+	border-bottom: #000000;
+}
+
+
+.pwal_wrap .pwal-settings table#pwal-statistics-toppages th.column-title,
+.pwal_wrap .pwal-settings table#pwal-statistics-summary th.column-title,
+.pwal_wrap .pwal-settings table#pwal-statistics-ip-addesses th.column-title {
+	width: 90%;
+}
+.pwal_wrap .pwal-settings table#pwal-statistics-toppages th.column-count,
+.pwal_wrap .pwal-settings table#pwal-statistics-toppages td.column-count,
+.pwal_wrap .pwal-settings table#pwal-statistics-summary th.column-count,
+.pwal_wrap .pwal-settings table#pwal-statistics-summary td.column-count,
+.pwal_wrap .pwal-settings table#pwal-statistics-ip-addesses th.column-count,
+.pwal_wrap .pwal-settings table#pwal-statistics-ip-addesses td.column-count {
+	width: 10%;
+	text-align: center;
+}

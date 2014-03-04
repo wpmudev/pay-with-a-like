@@ -1,6 +1,7 @@
+.pwal_content_wrapper { text-align: center; width: 100%; }
 .pwal_container { padding: 20px; margin: 10px; text-align: center; border: 1px solid #e3e3e3; border-radius: 3px; height: auto; }
 .pwal_container .pwal_description { font-size:1.2em; font-weight:bold; margin-bottom: 1em; }
-.pwal_container ul { list-style: none; overflow: auto; margin: auto; }
+.pwal_container ul { list-style: none; overflow: auto; margin: auto; padding: 0;}
 .pwal_container ul li{ float: left; list-style-type: none !important; margin: 0; padding: 0; }
 .pwal_container ul li { background: none !important;; background-image: none !important; }
 .pwal_container .pwal_list_item_1 { width: 100%; }
@@ -12,12 +13,12 @@
 
 /* If you want Facebook comments to be added by your visitor, remove the following line. 
 For correct display, you may need to change other css properties too*/
-/*
+
 .pwal_container .pwal_facebook_button .fb_edge_widget_with_comment iframe.fb_iframe_widget_lift {
-	display: none !important; 
-	margin-left: -999em !important;
+/*	display: none !important;  */
+	margin-left: -999em; 
 }
-*/
+
 /* .fb_edge_widget_with_comment span.fb_edge_comment_widget iframe.fb_ltr {display: none !important;} */
 
 /* Hiding Google pop-up. As G+ does not wait, removing this line will not give any pratical result */

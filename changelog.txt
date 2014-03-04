@@ -1,3 +1,21 @@
+V2.0: 2014-03-04
+- Refresh Settings UI. Now has own menu section
+- Added deeper support for Facebook API and FQL to check for previous likes. 
+- Added support for Facebook fan page support. Now if a visitor has liked some defined Facebook page, you can grant them automatic access to your hidden content.
+- Many options added to support social button style and layout. 
+- Added option to set/select language used for buttons if not in the default site lanauge.
+- Added support for loading hidden content via AJAX. Should help for WPE and caching plugin issues. 
+- Added customization options to the post metabox to override defaults. 
+- Added cool new charts to show statistics for social buttons uages.
+- Added cool new chat for single post showing social button usages. 
+- Added Top 10 Liked statistics table showing most liked posts.
+- Added Top 10 IP Addressses statistics table
+- Added support for real shortcode via WordPress do_shortcode(). See customization page. No more need to call custom template functions.
+
+
+V1.1.6: 
+- Loading external JS file to support https.
+
 V1.1.5: 2013-07-26
 - Fixed issue with Facebook API change. 
 - Added logic to determine if Facebook like was from other like button and not PWAL. Will be ignored.
