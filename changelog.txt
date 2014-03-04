@@ -1,3 +1,7 @@
+V2.0.0.1: 2014-03-04
+- Corrected output of DEBUG messages. 
+- Corrected a report of undefined variable.
+
 V2.0: 2014-03-04
 - Refresh Settings UI. Now has own menu section
 - Added deeper support for Facebook API and FQL to check for previous likes. 

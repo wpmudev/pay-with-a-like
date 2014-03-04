@@ -3,7 +3,7 @@
 Plugin Name: Pay With a Like
 Description: Allows protecting posts/pages until visitor likes the page or parts of the page with Facebook, Linkedin, Twitter or Google +1.
 Plugin URI: http://premium.wpmudev.org/project/pay-with-a-like
-Version: 2.0
+Version: 2.0.0.1
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 TextDomain: pwal
@@ -35,7 +35,7 @@ if ( !class_exists( 'PayWithaLike' ) ) {
 
 class PayWithaLike {
 
-	var $version			=	"2.0";
+	var $version			=	"2.0.0.1";
 	var $pwal_js_data 		= 	array();
 	var $_pagehooks 		= 	array();
 	var $_options_defaults 	= 	array();
@@ -615,11 +615,11 @@ class PayWithaLike {
 			//echo "admin[". $this->options["admin"] ."]<br />";
 			if ( $this->options["admin"] == 'true') { 
 				if ((current_user_can('administrator')) || (is_super_admin())) {
-					if ($this->pwal_js_data['debug'])
+					if ($this->pwal_js_data['debug'] == 'true')
 						echo "PWAL_DEBUG: ". __FUNCTION__ .": current user is admin/super admin<br />";
 					return false;
 				} else {
-					if ($this->pwal_js_data['debug'])
+					if ($this->pwal_js_data['debug'] == 'true')
 						echo "PWAL_DEBUG: ". __FUNCTION__ .": current user is not admin/super admin<br />";
 				}
 			}
@@ -627,7 +627,7 @@ class PayWithaLike {
 			// Show the bot full content, if selected so
 			//echo "bot[". $this->options["bot"] ."]<br />";
 			if ( ($this->options["bot"] == 'true') && ($this->is_bot()) ) {
-				if ($this->pwal_js_data['debug'])
+				if ($this->pwal_js_data['debug'] == 'true')
 					echo "PWAL_DEBUG: ". __FUNCTION__ .": bot is true<br />";
 				
 				return false;
@@ -641,7 +641,7 @@ class PayWithaLike {
 				if (!$current_user_role_level) {
 					$current_user_role_level = 0;
 				}
-				if ($this->pwal_js_data['debug'])
+				if ($this->pwal_js_data['debug'] == 'true')
 					echo "PWAL_DEBUG: ". __FUNCTION__ .": current_user_role_level[". $current_user_role_level ."]<br />";
 		
 				//echo "level[". $this->options['level'] ."]<br />";
@@ -649,7 +649,7 @@ class PayWithaLike {
 				if (!$log_user_role_level) {
 					$log_user_role_level = 0;
 				}
-				if ($this->pwal_js_data['debug'])
+				if ($this->pwal_js_data['debug'] == 'true')
 					echo "PWAL_DEBUG: ". __FUNCTION__ .": log_user_role_level[". $log_user_role_level ."]<br />";
 		
 				// If the current user level is less than our limit return the empty content.	
@@ -1086,7 +1086,7 @@ class PayWithaLike {
 				$url_to_like = get_permalink( $atts['post_id'] );
 			} else {
 				//$url_to_like = remove_query_arg('PWAL_DEBUG');
-				echo "_SERVER[REQUEST_URI][". $_SERVER['REQUEST_URL'] ."]<br />";
+				//echo "_SERVER[REQUEST_URI][". $_SERVER['REQUEST_URL'] ."]<br />";
 			}
 		}
 		
@@ -1119,7 +1119,7 @@ class PayWithaLike {
 						if ( $this->options["use_facebook"] ) {
 							//echo "options<pre>"; print_r($this->options); echo "</pre>";
 						
-							$content .= "<li class='pwal_list_item_".$n."'><div class='pwal_button pwal_facebook_button'><fb:like href='". $url_to_like ."' ref='pwal_facebook_". $atts['id'] ."' class='pwal_facebook_iframe' id='pwal_facebook_". $atts['content_id'] ."'  ";
+							$content .= "<li class='pwal_list_item_".$n."'><div class='pwal_button pwal_facebook_button'><fb:like href='". $url_to_like ."' ref='pwal_facebook_". $atts['content_id'] ."' class='pwal_facebook_iframe' id='pwal_facebook_". $atts['content_id'] ."'  ";
 			
 							if (!empty($this->options['facebook_layout_style'])) {
 								$content .= ' layout="'. $this->options['facebook_layout_style'] .'"';
@@ -1172,11 +1172,15 @@ class PayWithaLike {
 
 							$twitter_message = $this->options['twitter_message'];
 							if (!empty($twitter_message)) {
-								$twitter_message = str_replace('[POST_TITLE]', $post->post_title, $twitter_message);
+								if ((isset($atts['post_id'])) && (intval($atts['post_id']))) {
+									$twitter_message = str_replace('[POST_TITLE]', get_the_title($atts['post_id']), $twitter_message);
+								} else {
+									$twitter_message = str_replace('[POST_TITLE]', '', $twitter_message);
+								}
 								$twitter_message = str_replace('[SITE_TITLE]', get_option('blogname'), $twitter_message);
 								$twitter_message = str_replace('[SITE_TAGLINE]', get_option('blogdescription'), $twitter_message);
 							} 
-							$twitter_message = apply_filters('pwal_twitter_message', $twitter_message, $post);
+							$twitter_message = apply_filters('pwal_twitter_message', $twitter_message, $atts['post_id']);
 							if (!empty($twitter_message)) {
 								$twitter_data_message = ' data-text="'. htmlentities($twitter_message) .'" ';
 							} else {
