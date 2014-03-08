@@ -3,7 +3,7 @@
 Plugin Name: Pay With a Like
 Description: Allows protecting posts/pages until visitor likes the page or parts of the page with Facebook, Linkedin, Twitter or Google +1.
 Plugin URI: http://premium.wpmudev.org/project/pay-with-a-like
-Version: 2.0.0.1
+Version: 2.0.0.2
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 TextDomain: pwal
@@ -35,7 +35,7 @@ if ( !class_exists( 'PayWithaLike' ) ) {
 
 class PayWithaLike {
 
-	var $version			=	"2.0.0.1";
+	var $version			=	"2.0.0.2";
 	var $pwal_js_data 		= 	array();
 	var $_pagehooks 		= 	array();
 	var $_options_defaults 	= 	array();
@@ -197,7 +197,7 @@ class PayWithaLike {
 
 		if (($this->options['use_facebook']) && ($this->options['facebook_api_key']) && ($this->options['facebook_api_secret'])) {
 			$this->options['facebook_api_use'] = 'true';
-			$this->facebook_sdk_setup();
+			//$this->facebook_sdk_setup();
 		} else {
 			$this->options['facebook_api_use'] = 'false';
 		}
@@ -500,7 +500,7 @@ class PayWithaLike {
 		//echo "atts<pre>"; print_r($atts); echo "</pre>";
 		
 		
-		if ($atts['post_id']) {
+		if (!empty($atts['post_id'])) {
 			if (!$this->can_display_buttons($post))
 				return $content;
 
@@ -545,79 +545,21 @@ class PayWithaLike {
 
 	function can_display_buttons($post) {
 		
-		if ( is_singular($this->options['post_types'])) {
-			if ($this->pwal_js_data['debug'] == 'true')
-				echo "PWAL_DEBUG: ". __FUNCTION__ .": is_singular<br />";
-
-			if (is_object( $post )) {
-				if ($this->is_content_enabled( $post->ID ) == 'disable') {
-					if ($this->pwal_js_data['debug'] == 'true')
-						echo "PWAL_DEBUG: ". __FUNCTION__ .": content not enabled<br />";
-					return false;
-				} else {
-					if ($this->pwal_js_data['debug'] == 'true')
-						echo "PWAL_DEBUG: ". __FUNCTION__ .": content is enabled<br />";
-				}
-				
-				if (!isset($this->options['post_types'][$post->post_type])) {
-					if ($this->pwal_js_data['debug'] == 'true')
-						echo "PWAL_DEBUG: ". __FUNCTION__ .": post type [". $post->post_type ."] not enabled<br />";
-					return false;
-				} else {
-					if ($this->pwal_js_data['debug'] == 'true')
-						echo "PWAL_DEBUG: ". __FUNCTION__ .": post type [". $post->post_type ."] is enabled<br />";
-				}
-			}
-						
-		} else if (is_front_page())	{
-			if ($this->pwal_js_data['debug'] == 'true')
-				echo "PWAL_DEBUG: ". __FUNCTION__ .": is_front_page<br />";
-			
-			
-			if ($this->options["home"] != 'true') {
-				if ($this->pwal_js_data['debug'] == 'true')
-					echo "PWAL_DEBUG: ". __FUNCTION__ .": home not true<br />";
-				return false;
-			} else {
-				if ($this->pwal_js_data['debug'] == 'true')
-					echo "PWAL_DEBUG: ". __FUNCTION__ .": home is true<br />";
-			}
-			
-		} else if ( is_archive() ) {
-			if ($this->pwal_js_data['debug'] == 'true')
-				echo "PWAL_DEBUG: ". __FUNCTION__ .": is_archive<br />";
-
-			if ($this->options["multi"] != 'true') {
-				if ($this->pwal_js_data['debug'] == 'true')
-					echo "PWAL_DEBUG: ". __FUNCTION__ .": multi not true<br />";
-				return false;
-			} else {
-				if ($this->pwal_js_data['debug'] == 'true')
-					echo "PWAL_DEBUG: ". __FUNCTION__ .": multi is true<br />";
-			}
-			
-			if (is_object( $post )) {
-				if (!isset($this->options['post_types'][$post->post_type])) {
-					if ($this->pwal_js_data['debug'] == 'true')
-						echo "PWAL_DEBUG: ". __FUNCTION__ .": post type [". $post->post_type ."] not enabled<br />";
-					return false;
-				} else {
-					if ($this->pwal_js_data['debug'] == 'true')
-						echo "PWAL_DEBUG: ". __FUNCTION__ .": post type [". $post->post_type ."] is enabled<br />";
-				}
-			}
-		}
-
 		if (get_current_user_id()) {
 			global $current_user;
 			
 			// Show the admin full content, if selected so
 			//echo "admin[". $this->options["admin"] ."]<br />";
 			if ( $this->options["admin"] == 'true') { 
+				if ($this->pwal_js_data['debug'] == 'true')
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": option(admin): true<br />";
+				
 				if ((current_user_can('administrator')) || (is_super_admin())) {
 					if ($this->pwal_js_data['debug'] == 'true')
 						echo "PWAL_DEBUG: ". __FUNCTION__ .": current user is admin/super admin<br />";
+				
 					return false;
+				
 				} else {
 					if ($this->pwal_js_data['debug'] == 'true')
 						echo "PWAL_DEBUG: ". __FUNCTION__ .": current user is not admin/super admin<br />";
@@ -628,13 +570,15 @@ class PayWithaLike {
 			//echo "bot[". $this->options["bot"] ."]<br />";
 			if ( ($this->options["bot"] == 'true') && ($this->is_bot()) ) {
 				if ($this->pwal_js_data['debug'] == 'true')
-					echo "PWAL_DEBUG: ". __FUNCTION__ .": bot is true<br />";
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": option(bot): true<br />";
 				
 				return false;
 			}
 			
 			//echo "authorized[". $this->options['authorized'] ."]<br />";
 			if ( $this->options["authorized"] == 'true') { 
+				if ($this->pwal_js_data['debug'] == 'true')
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": option(authorized): true<br />";
 					
 				//echo "current_user<pre>"; print_r($current_user); echo "</pre>";
 				$current_user_role_level = $this->get_user_role_highest_level($current_user->allcaps);
@@ -657,6 +601,134 @@ class PayWithaLike {
 					return false;
 				}
 			}
+		} else {
+			if ($this->pwal_js_data['debug'] == 'true')
+				echo "PWAL_DEBUG: ". __FUNCTION__ .": user not logged in<br />";
+		}
+
+		$post_info = array(
+			'post'		=>	false,
+			'post_type'	=>	false
+		);
+
+		if (is_object( $post )) {
+			if (get_post_meta( $post->ID, 'pwal_enable', true ) == 'enable') {
+				$post_info['post'] = true;
+			}
+			
+			if (isset($this->options['post_types'][$post->post_type])) {
+				$post_info['post'] = true;
+			}
+		}
+		if ($this->pwal_js_data['debug'] == 'true') {
+			echo "post_info<pre>"; print_r($post_info); echo "</pre>";
+		}
+		
+		if ( is_singular($this->options['post_types'])) {
+			if ($this->pwal_js_data['debug'] == 'true') {
+				echo "PWAL_DEBUG: ". __FUNCTION__ .": is_singular<br />";
+			}
+
+			if ($post_info['post_type'] != true) {
+				if ($this->pwal_js_data['debug'] == 'true') {
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": post type [". $post->post_type ."] not enabled<br />";
+				}
+			} else {
+				if ($this->pwal_js_data['debug'] == 'true') {
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": post type [". $post->post_type ."] is enabled<br />";
+				}
+			}
+			
+			if ($post_info['post'] != true) {
+				if ($this->pwal_js_data['debug'] == 'true') {
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": post not enabled<br />";
+				}
+			} else {
+				if ($this->pwal_js_data['debug'] == 'true') {
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": post is enabled<br />";
+				}
+			}
+
+			if (($post_info['post'] != true) && ($post_info['post_type'] != true))
+				return false;
+
+		} else if (is_front_page())	{
+			if ($this->pwal_js_data['debug'] == 'true') {
+				echo "PWAL_DEBUG: ". __FUNCTION__ .": is_front_page: true<br />";
+			}
+			
+			if ($this->options["home"] != 'true') {
+				if ($this->pwal_js_data['debug'] == 'true') {
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": option(home) not true<br />";
+				}
+				return false;
+			} else {
+				if ($this->pwal_js_data['debug'] == 'true') {
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": option(home) is true<br />";
+				}
+			}
+			
+			if ($post_info['post_type'] != true) {
+				if ($this->pwal_js_data['debug'] == 'true') {
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": post type [". $post->post_type ."] not enabled<br />";
+				}
+			} else {
+				if ($this->pwal_js_data['debug'] == 'true') {
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": post type [". $post->post_type ."] is enabled<br />";
+				}
+			}
+			
+			if ($post_info['post'] != true) {
+				if ($this->pwal_js_data['debug'] == 'true') {
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": post not enabled<br />";
+				}
+			} else {
+				if ($this->pwal_js_data['debug'] == 'true') {
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": post id enabled<br />";
+				}
+			}
+			
+			if (($post_info['post'] != true) && ($post_info['post_type'] != true))
+				return false;
+						
+		} else if ( is_archive() ) {
+			if ($this->pwal_js_data['debug'] == 'true') {
+				echo "PWAL_DEBUG: ". __FUNCTION__ .": is_archive<br />";
+			}
+
+			if ($this->options["multi"] != 'true') {
+				if ($this->pwal_js_data['debug'] == 'true') {
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": option(multi): not true<br />";
+				}
+				return false;
+			} else {
+				if ($this->pwal_js_data['debug'] == 'true') {
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": option(multi): true<br />";
+				}
+			}
+			
+			if ($post_info['post_type'] != true) {
+				if ($this->pwal_js_data['debug'] == 'true') {
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": post type [". $post->post_type ."] not enabled<br />";
+				}
+			} else {
+				if ($this->pwal_js_data['debug'] == 'true') {
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": post type [". $post->post_type ."] is enabled<br />";
+				}
+			}
+			
+			if ($post_info['post'] != true) {
+				if ($this->pwal_js_data['debug'] == 'true') {
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": post not enabled<br />";
+				}
+			} else {
+				if ($this->pwal_js_data['debug'] == 'true') {
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": post is enabled<br />";
+				}
+			}
+			
+			if (($post_info['post'] != true) && ($post_info['post_type'] != true))
+				return false;
 		}
 		return true;
 	}
@@ -671,9 +743,6 @@ class PayWithaLike {
 		//return $content;
 		
 		global $post;
-		
-		if (!$this->can_display_buttons($post))
-			return $content;
 		
 		// Find method
 		$method = get_post_meta( $post->ID, 'pwal_method', true );
@@ -702,6 +771,13 @@ class PayWithaLike {
 		// Unsupported post type
 		if ( !is_object( $post ) && !$content )
 			return $content;
+		
+		
+		$display_buttons = $this->can_display_buttons($post);
+		$display_buttons = apply_filters('pwal_display_buttons', $display_buttons, $post->ID);
+		if (!$display_buttons)
+			return $content;
+		
 			
 		//echo "DEBUG: in ". __FUNCTION__ .": ". __LINE__ ."<br />";
 		
@@ -1400,7 +1476,7 @@ class PayWithaLike {
 		//$reply_data['likes'] = $this->cookie_likes;
 		
 		//echo "cookie_likes<pre>"; print_r($this->cookie_likes); echo "</pre>";
-		return $likes;
+		//return $likes;
 	}
 
 	function load_cookie_likes() {

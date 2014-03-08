@@ -1425,8 +1425,30 @@ function pwal_admin_panels_customization() {
 		$custom_css = "/wp-content/uploads/pay-with-a-like.css";
 		printf(__('If you want to apply your own styles copy contents of front.css to your theme css file and add this code inside functions.php of your theme:<code>add_theme_support( "pay_with_a_like_style" )</code> OR copy and rename the default css file <b>%s</b> as <b>%s</b> and edit this latter file. Then, your edited styles will not be affected from plugin updates.', 'pwal'), $default_css, $custom_css); 
 		?>
-		<br />
+		</div>
 	</div>
-</div>
+	
+<?php /* ?>	
+	<div class="postbox">
+		<h3 class="hndle" style="cursor:auto;"><span><?php _e('WordPress Filters/Actions', 'pwal') ?></span></h3>
+   		<div class="inside">		
+			<p><?php _e('Below is a list of the filters and actions available within the Pay With a Like plugin. These filters and actions allow you to customize the functionality of the plugin in certain instances where the settings do not function per your needs.', 'pwal'); ?></p>
+			
+			<h4><?php _e('Filters', 'pwal'); ?></h4>
+			<p><?php _e('As with all filters witin WordPress they are designed to allow filtering of data passed into the filter function from the calling function. The data to be filtered is normally the first argument passed into the filtering function. The filtering function can then perform some localized logic and pass back an alternate value. A filter <strong>must always pass back a value</strong>.', 'pwal'); ?></p>
+			<ul>
+				<li><strong>pwal_fb_locale</strong> - This filter is called when adding the Facebook JavaScript to the page. This filter allows you to override the locale value determined from the plugin. The filter is passed one argument.</li>
+				<li><strong>pwal_display_buttons</strong> - This filter is called just before the main logic to determine if a post should have the PWAL buttons displayed. This filters allows you to override the settings defined as part of the plugin. The filter will pass two arguments: $display_buttons - true/false is the current determined value to display the buttons, $post - is the post object of the item to be displayed. Maybe null. </li>
+				<li><strong>pwal_active_button_count</strong> - This filter is called just before the button box if presented for a single post. This filter will pass one argument: $n - the current number of buttons to be displayed.</li>
+				<li><strong>pwal_force_random</strong> - </li>
+				<li><strong>pwal_url_to_like</strong> - </li>
+				<li><strong>pwal_render_button_html</strong> - </li>
+				<li><strong>pwal_ajax_statistics</strong> - </li>
+				<li><strong>pwal_before_save_options</strong> - </li>
+				
+			</ul>
+		</div>
+	</div>
+<?php */ ?>
 	<?php
 }

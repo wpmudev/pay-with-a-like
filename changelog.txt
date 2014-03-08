@@ -1,3 +1,9 @@
+V2.0.0.2: 2014-03-06
+- Refine logic for determining when to show buttons.
+- Removed unused Facebook PHP SDK library
+- Added filter 'pwal_display_buttons' in content function to allow override of settings.
+
+
 V2.0.0.1: 2014-03-04
 - Corrected output of DEBUG messages. 
 - Corrected a report of undefined variable.
