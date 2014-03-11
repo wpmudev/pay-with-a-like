@@ -3,7 +3,7 @@
 Plugin Name: Pay With a Like
 Description: Allows protecting posts/pages until visitor likes the page or parts of the page with Facebook, Linkedin, Twitter or Google +1.
 Plugin URI: http://premium.wpmudev.org/project/pay-with-a-like
-Version: 2.0.0.2
+Version: 2.0.0.3
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 TextDomain: pwal
@@ -35,7 +35,7 @@ if ( !class_exists( 'PayWithaLike' ) ) {
 
 class PayWithaLike {
 
-	var $version			=	"2.0.0.2";
+	var $version			=	"2.0.0.3";
 	var $pwal_js_data 		= 	array();
 	var $_pagehooks 		= 	array();
 	var $_options_defaults 	= 	array();
@@ -195,11 +195,14 @@ class PayWithaLike {
 		
 		$this->options = wp_parse_args( $this->options, $this->_options_defaults );
 
-		if (($this->options['use_facebook']) && ($this->options['facebook_api_key']) && ($this->options['facebook_api_secret'])) {
+		if (($this->options['use_facebook']) 
+		 && ($this->options['facebook_api_key']) && (!empty($this->options['facebook_api_key']))
+		 && ($this->options['facebook_api_secret']) && (!empty($this->options['facebook_api_secret']))) {
 			$this->options['facebook_api_use'] = 'true';
 			//$this->facebook_sdk_setup();
 		} else {
 			$this->options['facebook_api_use'] = 'false';
+			$this->options['facebook_auth_polling'] = 'no';
 		}
 		//unset($this->options['post_types']);
 		if (!isset($this->options['post_types'])) {
@@ -527,7 +530,7 @@ class PayWithaLike {
 		}
 		else {
 			foreach ( $this->cookie_likes['data'] as $like ) {
-				if ($post_id > 0) {
+				if ($atts['post_id'] > 0) {
 					if ( $like["post_id"] == md5( $atts['post_id'] . $this->options["salt"] ) ) {
 						return $content;
 					}
@@ -1173,6 +1176,11 @@ class PayWithaLike {
 		}
 		$url_to_like = remove_query_arg('PWAL_DEBUG', $url_to_like);	
 		$url_to_like = apply_filters( 'pwal_url_to_like', $url_to_like );
+
+		if ($this->pwal_js_data['debug'] == 'true') {
+			echo "PWAL_DEBUG: ". __FUNCTION__ .": url_to_like[". $url_to_like ."]<br />";
+		}
+
 		//echo "url_to_like[". $url_to_like ."]<br />";
 		
 		$pwal_container_style = ' width:'.$atts['container_width'];
@@ -1263,7 +1271,7 @@ class PayWithaLike {
 								$twitter_data_message = '';
 							}
 			
-							$content .= "<li class='pwal_list_item_".$n."'><div class='pwal_button pwal_twitter_button' id='pwal_twitter_". $atts['content_id'] ."' data-url='". $url_to_like ."' ><a href='https://twitter.com/share' class='twitter-share-button' ". $twitter_data_message ." data-size='". $twitter_button_size ."' data-count='". $twitter_layout_style ."' data-lang='". $twitter_button_lang ."'>Tweet</a></div></li>";
+							$content .= "<li class='pwal_list_item_".$n."'><div class='pwal_button pwal_twitter_button' id='pwal_twitter_". $atts['content_id'] ."' ><a href='https://twitter.com/share' class='twitter-share-button' ". $twitter_data_message ." data-url='". $url_to_like ."' data-size='". $twitter_button_size ."' data-count='". $twitter_layout_style ."' data-lang='". $twitter_button_lang ."'>Tweet</a></div></li>";
 						}
 						break;
 					

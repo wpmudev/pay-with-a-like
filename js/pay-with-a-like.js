@@ -398,173 +398,20 @@ var wpmudev_pwal = jQuery.extend(wpmudev_pwal || {}, {
 			jQuery("body").append('<div id="fb-root"></div>');
 		}
 		
-		window.fbAsyncInit = function() {
-			// init the FB JS SDK
-
+		if (FB != undefined) {
 			if (pwal_data.debug == "true")
-				console.log('setup_facebook_js: load_facebook['+pwal_data.options['load_facebook']+']');
-
-			if ((pwal_data.options['load_facebook'] != undefined) && (pwal_data.options['load_facebook'] == "true")) {
-					
-				if (pwal_data.debug == "true")
-					console.log('setup_facebook_js: calling FB.init');
-
-				if ((pwal_data.options['facebook_api_key']) && (pwal_data.options['facebook_api_key'] != '')) {
-					
-					if (pwal_data.debug == "true")
-						console.log('setup_facebook_js: facebook API key['+pwal_data.options['facebook_api_key']+']');
-						
-					FB.init({
-						appId: pwal_data.options['facebook_api_key'],
-						status: true,
-						cookie: true,
-						xfbml: true,
-				    });
-				} else {
-					FB.init({
-						status: true,
-						cookie: true,
-						xfbml: true,
-				    });
-				}
-			} 
-			
+				console.log('setup_facebook_js: FB already defined');
+			wpmudev_pwal.facebook_after_load();
+		} else {
 			if (pwal_data.debug == "true")
-				console.log('setup_facebook_js: calling FB.XFBML.parse');
-			FB.XFBML.parse();
-			
-			//if (pwal_data.debug == "true")
-			//	console.log('setup_facebook_js: calling facebook_auth_loop');
-			wpmudev_pwal.facebook_auth_loop();
-			//if (pwal_data.debug == "true")
-			//	console.log('setup_facebook_js: returned from facebook_auth_loop');
-			
-						
-			FB.Event.subscribe('edge.create', function(href) {
-				
-				if (href != undefined) {
-					if (pwal_data.debug == "true") {
-						console.log('setup_facebook_js: href['+href+']');
-					}
-										
-					var pwal_info;
-					var fb_like_div;
-					var fb_like_span;
-					var fb_like_iframe;
-					var hasFBCommentPopup = false;
-					
-					// When a user clicks the like there will be a comment popup. We need to find the button with the expanded comment form 
-					// and show it to the user...
-					jQuery("div.pwal_container fb\\:like.pwal_facebook_iframe").each(function( index ) {						
-						
-						fb_like_div = this;
-						var fb_id = jQuery(fb_like_div).attr('id');
-						pwal_id = fb_id.replace('pwal_facebook_', '');
-						
-						if (wpmudev_pwal.buttons[pwal_id] != undefined) {
-							var pwal_info_tmp = wpmudev_pwal.buttons[pwal_id];
-							if (pwal_data.debug == "true")
-								console.log('pwal_info_tmp[%o]', pwal_info_tmp);
-							
-							fb_like_span = jQuery('span:first-child', fb_like_div);
-							var fb_span_height = jQuery(fb_like_span).height();
+				console.log('setup_facebook_js: FB no defined');
+			window.fbAsyncInit = function() {
+				// init the FB JS SDK
 
-							fb_like_iframe = jQuery('iframe:first-child', fb_like_span);
-							var fb_iframe_height = jQuery(fb_like_iframe).height();							
-							
-							if (fb_iframe_height > fb_span_height) { // Should be close to 179 but have seen this as low as 148 and as large as 211
-								pwal_info = pwal_info_tmp;
-								
-								if ((pwal_data.options['show_facebook_comment_popup'] != undefined) && (pwal_data.options['show_facebook_comment_popup'] == "true")) {
-								
-									jQuery(fb_like_span).width('450px');
-									jQuery(fb_like_span).height('179px');
-									jQuery(fb_like_iframe).css('margin-left', '0');
-								
-									hasFBCommentPopup = true;
-								} else {
-									jQuery(fb_like_div).css('margin-left', '-999em');
-								}
-								
-								// This return does not return from the function. 
-								// Per jQuery this is to break out of the loop
-								// see note on http://api.jquery.com/each/
-								return false;
-							}
-						}
-					});
-
-					// ...then we loop until the user can submitted or close the comment form.
-					if ((pwal_info != undefined) && (pwal_info != '')) {
-					
-						pwal_info['service'] = 'facebook';
-						
-						if (pwal_data.debug == "true")
-							console.log('setup_facebook_js: pwal_info[%o]', pwal_info);
-
-						var pollTimerFB = window.setInterval(function() {
-							//if (pwal_data.debug == "true")
-							//	console.log('setup_facebook_js: inside hasFBCommentPopup == true');
-							
-							jQuery('#pwal_container_'+pwal_info['content_id']+' ul').css('overflow', 'visible');
-								
-							if (fb_like_iframe != undefined) {
-								var fb_iframe_width = jQuery(fb_like_iframe).width();
-								var fb_iframe_height = jQuery(fb_like_iframe).height();
-
-								if (pwal_data.debug == "true")
-									console.log('fb_iframe h['+fb_iframe_height+'] w['+fb_iframe_width+']');
-
-								if (fb_iframe_height < 179) {
-									hasFBCommentPopup = false;
-									
-									jQuery(fb_like_span).width(fb_iframe_width);
-									jQuery(fb_like_span).height(fb_iframe_height);
-								} 
-							}
-							
-							if (hasFBCommentPopup == false) {	
-								jQuery('#pwal_container_'+pwal_info['content_id']+' ul').css('overflow', 'auto');
-								
-								//if (pwal_data.debug == "true")
-								//	console.log('setup_facebook_js: in hasFBCommentPopup == false');
-									
-								window.clearInterval(pollTimerFB);
-								jQuery(document).trigger('pwal_button_action', pwal_info);
-							}
-							
-						}, 500);
-					} else {
-						
-						for (var pwal_id in wpmudev_pwal.buttons) {
-							var pwal_info = wpmudev_pwal.buttons[pwal_id];
-							if (pwal_info['href'] == href) {
-								pwal_info['service'] = 'facebook';							
-
-								if (pwal_data.debug == "true")
-									console.log('setup_facebook_js: pwal_info #2 [%o]', pwal_info);
-
-								jQuery(document).trigger('pwal_button_action', pwal_info);
-							} 
-						}
-					}
-				} else {
-					if (pwal_data.debug == "true")
-						console.log('setup_facebook_js: href not defined');
-				}
-				
-			});
-			
-// Leave for future when we track un-like
-//			FB.Event.subscribe('edge.remove', function(href, widget) {
-//				if (href != undefined) {
-//					if (pwal_data.debug == "true")
-//						console.log('facebook: edge.remove href['+href+']');
-//				}
-//			});
-
-		};
-
+				wpmudev_pwal.facebook_after_load();
+			};
+		}
+		
 		// Load the SDK asynchronously
 		(function(d, s, id){
 			var js, fjs = d.getElementsByTagName(s)[0];
@@ -577,6 +424,171 @@ var wpmudev_pwal = jQuery.extend(wpmudev_pwal || {}, {
 				
 			fjs.parentNode.insertBefore(js, fjs);
 		}(document, 'script', 'facebook-jssdk'));
+	},
+	facebook_after_load: function() {
+		if (pwal_data.debug == "true")
+			console.log('facebook_after_load: load_facebook['+pwal_data.options['load_facebook']+']');
+
+		if ((pwal_data.options['load_facebook'] != undefined) && (pwal_data.options['load_facebook'] == "true")) {
+				
+			if (pwal_data.debug == "true")
+				console.log('facebook_after_load: calling FB.init');
+
+			//if ((pwal_data.options['facebook_api_key']) && (pwal_data.options['facebook_api_key'] != '')) {
+			if (pwal_data.options['facebook_api_use']) {
+				
+				if (pwal_data.debug == "true")
+					console.log('facebook_after_load: facebook API key['+pwal_data.options['facebook_api_key']+']');
+					
+				FB.init({
+					appId: pwal_data.options['facebook_api_key'],
+					status: true,
+					cookie: true,
+					xfbml: true,
+			    });
+			} else {
+				pwal_data.options['facebook_auth_polling'] = 'no';
+				FB.init({
+					status: true,
+					cookie: true,
+					xfbml: true,
+			    });
+			}
+		} 
+			
+		if (pwal_data.debug == "true")
+			console.log('facebook_after_load: calling FB.XFBML.parse');
+		FB.XFBML.parse();
+		
+		//if (pwal_data.debug == "true")
+		//	console.log('setup_facebook_js: calling facebook_auth_loop');
+		wpmudev_pwal.facebook_auth_loop();
+		//if (pwal_data.debug == "true")
+		//	console.log('setup_facebook_js: returned from facebook_auth_loop');
+		
+						
+		FB.Event.subscribe('edge.create', function(href) {
+			
+			if (href != undefined) {
+				if (pwal_data.debug == "true") {
+					console.log('setup_facebook_js: href['+href+']');
+				}
+									
+				var pwal_info;
+				var fb_like_div;
+				var fb_like_span;
+				var fb_like_iframe;
+				var hasFBCommentPopup = false;
+				
+				// When a user clicks the like there will be a comment popup. We need to find the button with the expanded comment form 
+				// and show it to the user...
+				jQuery("div.pwal_container fb\\:like.pwal_facebook_iframe").each(function( index ) {						
+					
+					fb_like_div = this;
+					var fb_id = jQuery(fb_like_div).attr('id');
+					pwal_id = fb_id.replace('pwal_facebook_', '');
+					
+					if (wpmudev_pwal.buttons[pwal_id] != undefined) {
+						var pwal_info_tmp = wpmudev_pwal.buttons[pwal_id];
+						if (pwal_data.debug == "true")
+							console.log('pwal_info_tmp[%o]', pwal_info_tmp);
+						
+						fb_like_span = jQuery('span:first-child', fb_like_div);
+						var fb_span_height = jQuery(fb_like_span).height();
+
+						fb_like_iframe = jQuery('iframe:first-child', fb_like_span);
+						var fb_iframe_height = jQuery(fb_like_iframe).height();							
+						
+						if (fb_iframe_height > fb_span_height) { // Should be close to 179 but have seen this as low as 148 and as large as 211
+							pwal_info = pwal_info_tmp;
+							
+							if ((pwal_data.options['show_facebook_comment_popup'] != undefined) && (pwal_data.options['show_facebook_comment_popup'] == "true")) {
+							
+								jQuery(fb_like_span).width('450px');
+								jQuery(fb_like_span).height('179px');
+								jQuery(fb_like_iframe).css('margin-left', '0');
+							
+								hasFBCommentPopup = true;
+							} else {
+								jQuery(fb_like_div).css('margin-left', '-999em');
+							}
+							
+							// This return does not return from the function. 
+							// Per jQuery this is to break out of the loop
+							// see note on http://api.jquery.com/each/
+							return false;
+						}
+					}
+				});
+
+				// ...then we loop until the user can submitted or close the comment form.
+				if ((pwal_info != undefined) && (pwal_info != '')) {
+				
+					pwal_info['service'] = 'facebook';
+					
+					if (pwal_data.debug == "true")
+						console.log('setup_facebook_js: pwal_info[%o]', pwal_info);
+
+					var pollTimerFB = window.setInterval(function() {
+						//if (pwal_data.debug == "true")
+						//	console.log('setup_facebook_js: inside hasFBCommentPopup == true');
+						
+						jQuery('#pwal_container_'+pwal_info['content_id']+' ul').css('overflow', 'visible');
+							
+						if (fb_like_iframe != undefined) {
+							var fb_iframe_width = jQuery(fb_like_iframe).width();
+							var fb_iframe_height = jQuery(fb_like_iframe).height();
+
+							if (pwal_data.debug == "true")
+								console.log('fb_iframe h['+fb_iframe_height+'] w['+fb_iframe_width+']');
+
+							if (fb_iframe_height < 179) {
+								hasFBCommentPopup = false;
+								
+								jQuery(fb_like_span).width(fb_iframe_width);
+								jQuery(fb_like_span).height(fb_iframe_height);
+							} 
+						}
+						
+						if (hasFBCommentPopup == false) {	
+							jQuery('#pwal_container_'+pwal_info['content_id']+' ul').css('overflow', 'auto');
+							
+							//if (pwal_data.debug == "true")
+							//	console.log('setup_facebook_js: in hasFBCommentPopup == false');
+								
+							window.clearInterval(pollTimerFB);
+							jQuery(document).trigger('pwal_button_action', pwal_info);
+						}
+						
+					}, 500);
+				} else {
+					
+					for (var pwal_id in wpmudev_pwal.buttons) {
+						var pwal_info = wpmudev_pwal.buttons[pwal_id];
+						if (pwal_info['href'] == href) {
+							pwal_info['service'] = 'facebook';							
+
+							if (pwal_data.debug == "true")
+								console.log('setup_facebook_js: pwal_info #2 [%o]', pwal_info);
+
+							jQuery(document).trigger('pwal_button_action', pwal_info);
+						} 
+					}
+				}
+			} else {
+				if (pwal_data.debug == "true")
+					console.log('setup_facebook_js: href not defined');
+			}
+			
+		});
+			
+// Leave for future when we track un-like
+//		FB.Event.subscribe('edge.remove', function(href, widget) {
+//			if (href != undefined) {
+//				if (pwal_data.debug == "true")
+//					console.log('facebook: edge.remove href['+href+']');
+//			}
+//		});
 	},
 	facebook_auth_loop: function() {
 		if (!jQuery('.pwal_container').length) {
