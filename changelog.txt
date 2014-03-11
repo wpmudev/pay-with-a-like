@@ -1,3 +1,6 @@
+V2.0.0.4: 2014-03-11
+- More changes to try and resolve multiple Facebook elements loading independant libraries and parsing content.
+
 V2.0.0.3: 2014-03-11
 - Corrected reported issue where the like URL on Twitter was not properly set.
 - Refactor some of the related Facebook JavaScript code to get around an issue where other plugins are also loading the Facebook all.js file Asynchronously.

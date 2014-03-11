@@ -398,7 +398,7 @@ var wpmudev_pwal = jQuery.extend(wpmudev_pwal || {}, {
 			jQuery("body").append('<div id="fb-root"></div>');
 		}
 		
-		if (FB != undefined) {
+		if (window.FB != undefined) {
 			if (pwal_data.debug == "true")
 				console.log('setup_facebook_js: FB already defined');
 			wpmudev_pwal.facebook_after_load();
