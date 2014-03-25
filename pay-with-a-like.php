@@ -3,7 +3,7 @@
 Plugin Name: Pay With a Like
 Description: Allows protecting posts/pages until visitor likes the page or parts of the page with Facebook, Linkedin, Twitter or Google +1.
 Plugin URI: http://premium.wpmudev.org/project/pay-with-a-like
-Version: 2.0.0.4
+Version: 2.0.0.5
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 TextDomain: pwal
@@ -35,7 +35,7 @@ if ( !class_exists( 'PayWithaLike' ) ) {
 
 class PayWithaLike {
 
-	var $version			=	"2.0.0.4";
+	var $version			=	"2.0.0.5";
 	var $pwal_js_data 		= 	array();
 	var $_pagehooks 		= 	array();
 	var $_options_defaults 	= 	array();
@@ -183,6 +183,7 @@ class PayWithaLike {
 	}
 
 	function init() {
+		
 		$this->set_option_defaults();
 
 		// Read all options at once
@@ -308,6 +309,8 @@ class PayWithaLike {
 	}
 
 	function wp_head() {
+		if (is_admin()) return;
+		
 		if ( $this->options["use_linkedin"] && $this->options["load_linkedin"] ) {
 			$locale = $this->options["linkedin_button_lang"];
 			if (!empty($locale)) {
@@ -459,7 +462,7 @@ class PayWithaLike {
 			'container_width'	=>	$this->options['container_width'],
 			'description'		=>	$this->options['description']
 		);
-		$atts = shortcode_atts( $default_atts, $atts  );
+		$atts = shortcode_atts( $default_atts, $atts );
 		$atts['method'] = 'tool';
 		$atts['content_id'] = $atts['id'];
 		unset($atts['id']);
@@ -481,7 +484,8 @@ class PayWithaLike {
 		//$post_id = 0;
 
 		global $post;
-		if (has_shortcode( $post->post_content, 'pwal' )) {
+		
+		if ((isset($post->post_content)) && (!empty($post->post_content)) && (has_shortcode( $post->post_content, 'pwal' ))) {
 		
 			$pattern = get_shortcode_regex();
 			preg_match_all( '/'. $pattern .'/s', $post->post_content, $matches, PREG_SET_ORDER );
@@ -499,7 +503,7 @@ class PayWithaLike {
 					}
 				}
 			}
-		}
+		} 
 		//echo "atts<pre>"; print_r($atts); echo "</pre>";
 		
 		
@@ -532,10 +536,14 @@ class PayWithaLike {
 			foreach ( $this->cookie_likes['data'] as $like ) {
 				if ($atts['post_id'] > 0) {
 					if ( $like["post_id"] == md5( $atts['post_id'] . $this->options["salt"] ) ) {
+						$content = apply_filters( 'the_content', $content );
+						$content = str_replace( ']]>', ']]&gt;', $content );
 						return $content;
 					}
 				} else {
 					if ( $like["content_id"] == $atts['content_id'] ) {
+						$content = apply_filters( 'the_content', $content );
+						$content = str_replace( ']]>', ']]&gt;', $content );
 						return $content;
 					}
 				}
@@ -742,6 +750,8 @@ class PayWithaLike {
 	 *	
 	 */
 	function content( $content, $force=false ) {
+		if (is_admin()) return $content;
+		
 		//echo "DEBUG: in ". __FUNCTION__ .": ". __LINE__ ."<br />";
 		//return $content;
 		

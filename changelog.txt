@@ -1,3 +1,6 @@
+V2.0.0.5: 2014-03-25
+- Changes to resolve issue with nested shortcodes rendering after like button action.
+
 V2.0.0.4: 2014-03-11
 - More changes to try and resolve multiple Facebook elements loading independant libraries and parsing content.
 
