@@ -3,7 +3,7 @@
 Plugin Name: Pay With a Like
 Description: Allows protecting posts/pages until visitor likes the page or parts of the page with Facebook, Linkedin, Twitter or Google +1.
 Plugin URI: http://premium.wpmudev.org/project/pay-with-a-like
-Version: 2.0.0.5
+Version: 2.0.0.6
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 TextDomain: pwal
@@ -1031,17 +1031,17 @@ class PayWithaLike {
 		}
 	}
 	
-	function facebook_sdk_setup() {
-		if (!$this->facebook_sdk_ref) {
-			include_once( dirname(__FILE__) .'/lib/facebook-php-sdk/facebook.php');
-
-			$this->facebook_sdk_ref = new Facebook(array(
-		  		'appId'  => $this->options['facebook_api_key'],
-		  		'secret' => $this->options['facebook_api_secret'],
-				)
-			);
-		}		
-	}
+//	function facebook_sdk_setup() {
+//		if (!$this->facebook_sdk_ref) {
+//			//include_once( dirname(__FILE__) .'/lib/facebook-php-sdk/facebook.php');
+//
+//			$this->facebook_sdk_ref = new Facebook(array(
+//		  		'appId'  => $this->options['facebook_api_key'],
+//		  		'secret' => $this->options['facebook_api_secret'],
+//				)
+//			);
+//		}		
+//	}
 	
 	function facebook_sdk_load_user() {
 		//echo "facebook_sdk_ref<pre>"; print_r($this->facebook_sdk_ref); echo "</pre>";
@@ -2370,7 +2370,7 @@ class PayWithaLike {
 										$this->options['facebook_fan_pages'] = array();
 						
 									//echo "facebook_fan_page_urls<pre>"; print_r( $_POST['pwal']['facebookfan_page_urls'] ); echo "</pre>";
-									include_once( dirname(__FILE__) .'/lib/facebook-php-sdk/facebook.php');
+									//include_once( dirname(__FILE__) .'/lib/facebook-php-sdk/facebook.php');
 	
 									$facebook = new Facebook(array(
 										'appId'  => $this->options['facebook_api_key'],

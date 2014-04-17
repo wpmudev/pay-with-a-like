@@ -1,3 +1,6 @@
+V2.0.0.6: 2014-04-17
+- Removed Fascebook PHP SDK references as these were only used for testing. All Facebook functionality is made via JavaScript
+
 V2.0.0.5: 2014-03-25
 - Changes to resolve issue with nested shortcodes rendering after like button action.
 
