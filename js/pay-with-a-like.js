@@ -506,7 +506,7 @@ var wpmudev_pwal = jQuery.extend(wpmudev_pwal || {}, {
 							
 								jQuery(fb_like_span).width('450px');
 								jQuery(fb_like_span).height('179px');
-								jQuery(fb_like_iframe).css('margin-left', '0');
+								//jQuery(fb_like_iframe).css('margin-left', '0');
 							
 								hasFBCommentPopup = true;
 							} else {

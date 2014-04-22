@@ -58,6 +58,13 @@ function pwal_admin_panels_global() {
 			</table>
 		</div>
 	</div>
+	<?php
+}
+
+
+function pwal_admin_panels_defaults() {
+	global $pwal;
+	?>
 	<div class="postbox">
 		<h3 class="hndle" style="cursor:auto;"><span><?php _e('Default settings for Pay With a Like content protection', 'pwal') ?></span></h3>
    		<div class="inside">		
@@ -91,14 +98,6 @@ function pwal_admin_panels_global() {
 			</tr>
 
 			<tr valign="top">
-			<th scope="row" ><label for="pwal_container_width"><?php _e('Buttons container width', 'pwal') ?></label></th>
-			<td colspan="2">
-				<p class="description"><?php _e('By default the Pay With a Like button container is added below or within the post content. The width defaults to 100%. If for some reason the width does not work well for your theme you can specify the alternate container width here. You may also override this on the individual posts.', 'pwal') ?></p>
-				<input type="text" class="regular-text" id="pwal_container_width" name="pwal[container_width]" value="<?php echo $pwal->options["container_width"] ?>" />
-			</td>
-		</tr>
-
-			<tr valign="top">
 				<th scope="row" ><label for="pwal_content_reload"><?php _e('Reload Content on Like', 'pwal')?></label></th>
 				<td colspan="2">
 					<p class="description"><?php 
@@ -110,6 +109,54 @@ function pwal_admin_panels_global() {
 				</select>
 				</td>
 			</tr>
+			</table>
+		</div>
+	</div>
+	<?php
+}
+
+function pwal_admin_panels_container() {
+	global $pwal, $wp_roles;
+	?>
+	<div class="postbox">
+		<h3 class="hndle" style="cursor:auto;"><span><?php _e('Buttons Container Settings', 'pwal') ?></span></h3>
+		<div class="inside">		
+			<p class="description"><?php _e('This section give you some control over the container box wrapped around the social buttons.', 'pwal') ?></p>
+			<table class="form-table">
+			<tr valign="top">
+				<th scope="row" ><label for="pwal_container_width"><?php _e('Width', 'pwal') ?></label></th>
+				<td colspan="2">
+					<p class="description"><?php _e('By default the Pay With a Like button container is added below or within the post content. The width defaults to 100%. If for some reason the width does not work well for your theme you can specify the alternate container width here. You may also override this on the individual posts.', 'pwal') ?></p>
+					<input type="text" class="regular-text" id="pwal_container_width" name="pwal[container_width]" value="<?php echo $pwal->options["container_width"] ?>" />
+				</td>
+			</tr>
+<?php /* ?>			
+			<tr valign="top">
+				<th scope="row" ><label for="pwal_container_height"><?php _e('Height', 'pwal') ?></label></th>
+				<td colspan="2">
+					<p class="description"><?php _e('Controls the height of the Pay With a Like button container. Default if left blank is auto.', 'pwal') ?></p>
+					<input type="text" class="regular-text" id="pwal_container_height" name="pwal[container_height]" value="<?php echo $pwal->options["container_width"] ?>" />
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row" ><label for="pwal_container_border_width"><?php _e('Border', 'pwal') ?></label></th>
+				<td colspan="2">
+					<p class="description"><?php _e('The Pay With a Like button container will show a border around the section. This is used to hightlight the container. This settings lets you override the border width, border style and border color values. Default values a border width: 1, border style: solid and border color: #E3E3E3', 'pwal') ?></p>
+					<input type="text" class="regular-text" size="2" style="width: 100px;" id="pwal_container_border_width" name="pwal[container_border_width]" value="<?php echo $pwal->options["container_border_width"] ?>" /> <select id="pwal_container_border_style" name="pwal[container_border_style]">
+					<option value="none" <?php selected( $pwal->options['container_border_style'], 'none' ) ?> ><?php _e('No border','pwal')?></option>
+					<option value="solid" <?php selected( $pwal->options['container_border_style'], 'solid' ) ?>><?php _e('solid','pwal')?></option>
+					<option value="dotted" <?php selected( $pwal->options['container_border_style'], 'dotted' ) ?>><?php _e('dotted','pwal')?></option>
+					<option value="dashed" <?php selected( $pwal->options['container_border_style'], 'dashed' ) ?>><?php _e('dashed','pwal')?></option>
+					<option value="double" <?php selected( $pwal->options['container_border_style'], 'double' ) ?>><?php _e('double','pwal')?></option>
+					<option value="groove" <?php selected( $pwal->options['container_border_style'], 'groove' ) ?>><?php _e('groove','pwal')?></option>
+					<option value="ridge" <?php selected( $pwal->options['container_border_style'], 'ridge' ) ?>><?php _e('ridge','pwal')?></option>
+					<option value="outset" <?php selected( $pwal->options['container_border_style'], 'outset' ) ?>><?php _e('outset','pwal')?></option>
+					<option value="initial" <?php selected( $pwal->options['container_border_style'], 'initial' ) ?>><?php _e('initial','pwal')?></option>
+					<option value="inherit" <?php selected( $pwal->options['container_border_style'], 'inherit' ) ?>><?php _e('inherit','pwal')?></option>
+				</select> <input type="text" class="regular-text" size="2" style="width: 100px;" id="pwal_container_border_color" name="pwal[container_border_color]" value="<?php echo $pwal->options["container_border_color"] ?>" />
+				</td>
+			</tr>
+<?php */ ?>
 			</table>
 		</div>
 	</div>

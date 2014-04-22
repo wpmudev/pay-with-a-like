@@ -1,3 +1,6 @@
+V2.0.0.7: 2014-04-22
+- Reworked the buttons container structure from unordered list to just divs wrapped in an outer container. This was to make the Facebook comment popup easier to display without scrollbars. 
+- 
 V2.0.0.6: 2014-04-17
 - Removed Fascebook PHP SDK references as these were only used for testing. All Facebook functionality is made via JavaScript
 

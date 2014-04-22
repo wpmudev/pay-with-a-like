@@ -3,7 +3,7 @@
 Plugin Name: Pay With a Like
 Description: Allows protecting posts/pages until visitor likes the page or parts of the page with Facebook, Linkedin, Twitter or Google +1.
 Plugin URI: http://premium.wpmudev.org/project/pay-with-a-like
-Version: 2.0.0.6
+Version: 2.0.0.7
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 TextDomain: pwal
@@ -283,6 +283,10 @@ class PayWithaLike {
 			'load_twitter'						=> 	'true',
 			'load_google'						=> 	'true',
 			'container_width'					=>	'',
+			'container_height'					=>	'',
+			'container_border_width'			=>	'1',
+			'container_border_style'			=>	'solid',
+			'container_border_color'			=>	'#E3E3E3',
 			'show_facebook_comment_popup' 		=> 	'false',
 			'facebook_api_key'					=>	'',
 			'facebook_api_secret'				=>	'',
@@ -1192,13 +1196,26 @@ class PayWithaLike {
 		}
 
 		//echo "url_to_like[". $url_to_like ."]<br />";
+		if (empty($atts['container_width'])) {
+			global $content_width;
+			if ((isset($content_width)) && (!empty($content_width))) {
+				$atts['container_width'] = $content_width .'px';
+			}
+		}
 		
-		$pwal_container_style = ' width:'.$atts['container_width'];
+		if (!empty($atts['container_width']))
+			$pwal_container_style = ' width:'. $atts['container_width'] .';';
+		else
+			$pwal_container_style = '';
 		
-		$content  = '<div class="pwal_container" id="pwal_container_'. $atts['content_id'] .'" style="'. $pwal_container_style .'">';
+		if (!empty($pwal_container_style)) {
+			$pwal_container_style = ' style="'. $pwal_container_style .'" ';
+		}
+		
+		$content  = '<div class="pwal_container" id="pwal_container_'. $atts['content_id'] .'"'. $pwal_container_style .'>';
 		if ( $atts['description'] )
-			$content .= "<div class='pwal_description'>". $atts['description'] . "</div>";
-		$content .= "<ul>";
+			$content .= '<div class="pwal_description">'. $atts['description'] . '</div>';
+		$content .= '<div class="pwal_buttons">';
 		$script   = "";
 
 		// Now show the buttons. 
@@ -1213,7 +1230,7 @@ class PayWithaLike {
 						if ( $this->options["use_facebook"] ) {
 							//echo "options<pre>"; print_r($this->options); echo "</pre>";
 						
-							$content .= "<li class='pwal_list_item_".$n."'><div class='pwal_button pwal_facebook_button'><fb:like href='". $url_to_like ."' ref='pwal_facebook_". $atts['content_id'] ."' class='pwal_facebook_iframe' id='pwal_facebook_". $atts['content_id'] ."'  ";
+							$content .= "<div class='pwal_button pwal_button_".$n." pwal_button_facebook'><fb:like href='". $url_to_like ."' ref='pwal_facebook_". $atts['content_id'] ."' class='pwal_facebook_iframe' id='pwal_facebook_". $atts['content_id'] ."'  ";
 			
 							if (!empty($this->options['facebook_layout_style'])) {
 								$content .= ' layout="'. $this->options['facebook_layout_style'] .'"';
@@ -1230,7 +1247,7 @@ class PayWithaLike {
 							if ($this->options['facebook_include_share'] == 'yes') {
 								$content .= ' share="true"';
 							}
-							$content .= "></div></li>";
+							$content .= "></div>";
 						}
 						break;
 				
@@ -1244,7 +1261,7 @@ class PayWithaLike {
 								$linkedin_data_counter = " data-counter='". $linkedin_layout_style ."' ";
 							}
 			
-							$content .= "<li class='pwal_list_item_".$n."'><div class='pwal_button pwal_linkedin_button'><script type='IN/Share' ". $linkedin_data_counter ." data-url='". $url_to_like ."' data-onsuccess='pwal_linkedin_callback_". $atts['content_id'] ."'></script><script type='text/javascript'>function pwal_linkedin_callback_". $atts['content_id'] ."(){ wpmudev_pwal.setup_linkedin_js('". $atts['content_id'] ."'); } </script></div></li>";
+							$content .= "<div class='pwal_button pwal_button_".$n." pwal_button_linkedin'><script type='IN/Share' ". $linkedin_data_counter ." data-url='". $url_to_like ."' data-onsuccess='pwal_linkedin_callback_". $atts['content_id'] ."'></script><script type='text/javascript'>function pwal_linkedin_callback_". $atts['content_id'] ."(){ wpmudev_pwal.setup_linkedin_js('". $atts['content_id'] ."'); } </script></div>";
 						}
 						break;
 
@@ -1281,7 +1298,7 @@ class PayWithaLike {
 								$twitter_data_message = '';
 							}
 			
-							$content .= "<li class='pwal_list_item_".$n."'><div class='pwal_button pwal_twitter_button' id='pwal_twitter_". $atts['content_id'] ."' ><a href='https://twitter.com/share' class='twitter-share-button' ". $twitter_data_message ." data-url='". $url_to_like ."' data-size='". $twitter_button_size ."' data-count='". $twitter_layout_style ."' data-lang='". $twitter_button_lang ."'>Tweet</a></div></li>";
+							$content .= "<div class='pwal_button pwal_button_".$n." pwal_button_twitter' id='pwal_twitter_". $atts['content_id'] ."' ><a href='https://twitter.com/share' class='twitter-share-button' ". $twitter_data_message ." data-url='". $url_to_like ."' data-size='". $twitter_button_size ."' data-count='". $twitter_layout_style ."' data-lang='". $twitter_button_lang ."'>Tweet</a></div>";
 						}
 						break;
 					
@@ -1294,7 +1311,7 @@ class PayWithaLike {
 							} 
 							list($google_button_size, $google_button_annotation) = explode('-', $google_layout_style);
 			
-							$content .= "<li class='pwal_list_item_".$n."'><div class='pwal_button pwal_google_button'><g:plusone size='". $google_button_size ."' href='". $url_to_like ."' annotation='". $google_button_annotation ."' callback='pwal_google_callback_". $atts['content_id'] ."'></g:plusone></div><script type='text/javascript'> function pwal_google_callback_". $atts['content_id'] ."(data){ wpmudev_pwal.google_plus_callback_js('".$atts['content_id'] ."', data); } </script></li>";
+							$content .= "<div class='pwal_button pwal_button_".$n." pwal_button_google'><g:plusone size='". $google_button_size ."' href='". $url_to_like ."' annotation='". $google_button_annotation ."' callback='pwal_google_callback_". $atts['content_id'] ."'></g:plusone></div><script type='text/javascript'> function pwal_google_callback_". $atts['content_id'] ."(data){ wpmudev_pwal.google_plus_callback_js('".$atts['content_id'] ."', data); } </script></div>";
 						}
 						break;
 				}
@@ -1302,7 +1319,8 @@ class PayWithaLike {
 			}		
 		}
 		if (!empty($content)) {
-			$content .= "</ul></div>";
+			$content .= "</div>";
+			
 			$content = apply_filters( "pwal_render_button_html", $content, $atts['content_id'], $atts['post_id'] );
 
 			if (!isset($this->pwal_js_data['buttons']))
@@ -2505,6 +2523,7 @@ class PayWithaLike {
 						$this->options['post_types']						= $_POST['pwal']['post_types'];
 					else
 						$this->options['post_types']						= array();
+
 					
 					if (isset($_POST['pwal']['show_metabox']))
 						$this->options['show_metabox']						= $_POST['pwal']['show_metabox'];
@@ -2520,43 +2539,78 @@ class PayWithaLike {
 					if (isset($_POST['pwal']['excerpt']))
 						$this->options['excerpt']							= esc_attr($_POST['pwal']['excerpt']);
 					else
-						$this->options['excerpt']						= '';
+						$this->options['excerpt']							= '';
+
 
 					if (isset($_POST['pwal']['description']))
 						$this->options['description']						= esc_attr($_POST['pwal']['description']);
 					else
 						$this->options['description']						= '';
 
+
 					if (isset($_POST['pwal']['container_width']))
 						$this->options['container_width']					= esc_attr($_POST['pwal']['container_width']);
 					else
-						$this->options['description']						= '';
+						$this->options['container_width']					= '';
+
+
+//					if (isset($_POST['pwal']['container_height']))
+//						$this->options['container_height']					= esc_attr($_POST['pwal']['container_height']);
+//					else
+//						$this->options['container_height']					= '';
+
+
+//					if (isset($_POST['pwal']['container_border_width']))
+//						$this->options['container_border_width']			= esc_attr($_POST['pwal']['container_border_width']);
+//					else
+//						$this->options['container_border_width']			= '';
+
+
+//					if (isset($_POST['pwal']['container_border_style']))
+//						$this->options['container_border_style']			= esc_attr($_POST['pwal']['container_border_style']);
+//					else
+//						$this->options['container_border_style']			= '';
+
+
+//					if (isset($_POST['pwal']['container_border_color']))
+//						$this->options['container_border_color']			= esc_attr($_POST['pwal']['container_border_color']);
+//					else
+//						$this->options['container_border_color']			= '';
+
 
 					if (isset($_POST['pwal']['content_reload']))
 						$this->options['content_reload']					= $_POST['pwal']['content_reload'];
 					else
 						$this->options['content_reload']					= 'refresh';
+
 					
 					if (isset($_POST['pwal']['home']))
-						$this->options['home']							= $_POST['pwal']['home'];
+						$this->options['home']								= $_POST['pwal']['home'];
+
 
 					if (isset($_POST['pwal']['multi']))
-						$this->options['multi']							= $_POST['pwal']['multi'];
+						$this->options['multi']								= $_POST['pwal']['multi'];
+
 
 					if (isset($_POST['pwal']['admin']))
-						$this->options['admin']							= $_POST['pwal']['admin'];
+						$this->options['admin']								= $_POST['pwal']['admin'];
+
 
 					if (isset($_POST['pwal']['authorized']))
-						$this->options['authorized']					= $_POST['pwal']['authorized'];
+						$this->options['authorized']						= $_POST['pwal']['authorized'];
+
 
 					if (isset($_POST['pwal']['level']))
-						$this->options['level']							= $_POST['pwal']['level'];
+						$this->options['level']								= $_POST['pwal']['level'];
+
 
 					if (isset($_POST['pwal']['bot']))
-						$this->options['bot']							= $_POST['pwal']['bot'];
+						$this->options['bot']								= $_POST['pwal']['bot'];
+
 
 					if (isset($_POST['pwal']['cookie']))
-						$this->options['cookie']						= intval($_POST['pwal']['cookie']);
+						$this->options['cookie']							= intval($_POST['pwal']['cookie']);
+
 					
 					break;
 				
@@ -2699,6 +2753,8 @@ class PayWithaLike {
 								<div id="post-body" class="metabox-holder columns-1">
 									<div id="post-body-content">
 										<?php pwal_admin_panels_global(); ?>
+										<?php pwal_admin_panels_defaults(); ?>
+										<?php pwal_admin_panels_container(); ?>
 										<?php pwal_admin_panels_visibility(); ?>
 									</div>
 								</div>
