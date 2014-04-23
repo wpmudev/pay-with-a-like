@@ -1,3 +1,7 @@
+V2.0.0.8: 2014-04-22
+- Corrected reported issue of an extra closing div left orphaned under google plus button section.
+- Added logic to use the theme content_width global if defined for the default width of the buttons container.
+
 V2.0.0.7: 2014-04-22
 - Reworked the buttons container structure from unordered list to just divs wrapped in an outer container. This was to make the Facebook comment popup easier to display without scrollbars. 
 - 

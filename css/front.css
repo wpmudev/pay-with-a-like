@@ -1,9 +1,9 @@
-.pwal_content_wrapper { text-align: center; width: 100%; }
+.pwal_content_wrapper { text-align: center; width: 100%;  margin: auto; }
 .pwal_container { 
 	width: 100%;
 	float: left;
 	padding: 20px; 
-	margin: 10px; 
+	margin: 10px auto; 
 	text-align: center; 
 	border: 1px solid #e3e3e3; 
 	border-radius: 3px; 

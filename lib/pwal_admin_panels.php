@@ -126,7 +126,7 @@ function pwal_admin_panels_container() {
 			<tr valign="top">
 				<th scope="row" ><label for="pwal_container_width"><?php _e('Width', 'pwal') ?></label></th>
 				<td colspan="2">
-					<p class="description"><?php _e('By default the Pay With a Like button container is added below or within the post content. The width defaults to 100%. If for some reason the width does not work well for your theme you can specify the alternate container width here. You may also override this on the individual posts.', 'pwal') ?></p>
+					<p class="description"><?php _e('By default the Pay With a Like button container is added below or within the post content. The width defaults to the theme content_width variable if defined. If not it is set to 100%. If for some reason the width does not work well for your theme you can specify the alternate container width here. You may also override this on the individual posts.', 'pwal') ?></p>
 					<input type="text" class="regular-text" id="pwal_container_width" name="pwal[container_width]" value="<?php echo $pwal->options["container_width"] ?>" />
 				</td>
 			</tr>

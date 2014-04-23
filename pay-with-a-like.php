@@ -3,11 +3,11 @@
 Plugin Name: Pay With a Like
 Description: Allows protecting posts/pages until visitor likes the page or parts of the page with Facebook, Linkedin, Twitter or Google +1.
 Plugin URI: http://premium.wpmudev.org/project/pay-with-a-like
-Version: 2.0.0.7
+Version: 2.0.0.8
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 TextDomain: pwal
-Domain Path: /languages/
+Domain Path: /languages
 WDP ID: 7330
 */
 
@@ -35,7 +35,7 @@ if ( !class_exists( 'PayWithaLike' ) ) {
 
 class PayWithaLike {
 
-	var $version			=	"2.0.0.5";
+	var $version			=	"2.0.0.8";
 	var $pwal_js_data 		= 	array();
 	var $_pagehooks 		= 	array();
 	var $_options_defaults 	= 	array();
@@ -1196,18 +1196,28 @@ class PayWithaLike {
 		}
 
 		//echo "url_to_like[". $url_to_like ."]<br />";
+		
+		//echo "atts content_width is empty<br/>";
 		if (empty($atts['container_width'])) {
-			global $content_width;
-			if ((isset($content_width)) && (!empty($content_width))) {
-				$atts['container_width'] = $content_width .'px';
+			
+			if ((isset($atts['post_id'])) && (!empty($atts['post_id']))) {
+				$atts['container_width'] = get_post_meta( $atts['post_id'], 'pwal_container_width', true );
+			}
+			
+			if (empty($atts['container_width'])) {
+				global $content_width;
+				if ((isset($content_width)) && (!empty($content_width))) {
+					$atts['container_width'] = $content_width .'px';
+				}
 			}
 		}
+		//echo "atts<pre>"; print_r($atts); echo "</pre>";
 		
 		if (!empty($atts['container_width']))
-			$pwal_container_style = ' width:'. $atts['container_width'] .';';
+			$pwal_container_style = ' width:'. $this->check_size_qualifier($atts['container_width']) .';';
 		else
 			$pwal_container_style = '';
-		
+		//echo "pwal_container_style[". $pwal_container_style ."]<br />";
 		if (!empty($pwal_container_style)) {
 			$pwal_container_style = ' style="'. $pwal_container_style .'" ';
 		}
@@ -1311,13 +1321,15 @@ class PayWithaLike {
 							} 
 							list($google_button_size, $google_button_annotation) = explode('-', $google_layout_style);
 			
-							$content .= "<div class='pwal_button pwal_button_".$n." pwal_button_google'><g:plusone size='". $google_button_size ."' href='". $url_to_like ."' annotation='". $google_button_annotation ."' callback='pwal_google_callback_". $atts['content_id'] ."'></g:plusone></div><script type='text/javascript'> function pwal_google_callback_". $atts['content_id'] ."(data){ wpmudev_pwal.google_plus_callback_js('".$atts['content_id'] ."', data); } </script></div>";
+							$content .= "<div class='pwal_button pwal_button_".$n." pwal_button_google'><g:plusone size='". $google_button_size ."' href='". $url_to_like ."' annotation='". $google_button_annotation ."' callback='pwal_google_callback_". $atts['content_id'] ."'></g:plusone><script type='text/javascript'> function pwal_google_callback_". $atts['content_id'] ."(data){ wpmudev_pwal.google_plus_callback_js('".$atts['content_id'] ."', data); } </script></div>";
 						}
 						break;
 				}
 				//$content .= '</li>';
 			}		
 		}
+		$content .= "</div>";
+		
 		if (!empty($content)) {
 			$content .= "</div>";
 			
@@ -3108,6 +3120,20 @@ class PayWithaLike {
 		}
 	 
 		return false;	// Not a bot
+	}
+	
+	function check_size_qualifier($size_str = '', $size_qualifiers = array('px', 'pt', 'em', '%')) {
+		if (empty($size_str)) $size_str = "0"; //return $size_str;
+
+		if (count($size_qualifiers)) {
+			foreach($size_qualifiers as $size_qualifier) {
+				if (empty($size_qualifier)) continue;
+
+				if ( substr($size_str, strlen($size_qualifier) * -1, strlen($size_qualifier)) === $size_qualifier)
+					return $size_str;
+			}
+			return intval($size_str) ."px";
+		}
 	}
 	
 /*
