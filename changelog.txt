@@ -1,3 +1,6 @@
+V2.0.0.9: 2014-05-06
+- Corrected loading of Facebook PHP SDK. Seems other plugins are loading other classes named Facebook which consuses PWAL. Made Facebook class unique to PWAL.
+
 V2.0.0.8: 2014-04-22
 - Corrected reported issue of an extra closing div left orphaned under google plus button section.
 - Added logic to use the theme content_width global if defined for the default width of the buttons container.

@@ -3,7 +3,7 @@
 Plugin Name: Pay With a Like
 Description: Allows protecting posts/pages until visitor likes the page or parts of the page with Facebook, Linkedin, Twitter or Google +1.
 Plugin URI: http://premium.wpmudev.org/project/pay-with-a-like
-Version: 2.0.0.8
+Version: 2.0.0.9
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 TextDomain: pwal
@@ -125,7 +125,7 @@ class PayWithaLike {
 /*		
 		include_once( dirname(__FILE__) .'/lib/facebook-php-sdk/facebook.php');
 		
-		$facebook = new Facebook(array(
+		$facebook = new PWALFacebook(array(
 			'appId'  => '489708481139071',
 			'secret' => '094e908608b9085916a9f474a03ef730',
 			'cookie' => true, 
@@ -169,7 +169,7 @@ class PayWithaLike {
 					echo "result<pre>"; print_r($result); echo "</pre>";
 					//}
 				
-		  	} catch (FacebookApiException $e) {
+		  	} catch (PWALFacebookApiException $e) {
 		    	error_log($e);
 		    	$user = null;
 		  	}
@@ -1039,7 +1039,7 @@ class PayWithaLike {
 //		if (!$this->facebook_sdk_ref) {
 //			//include_once( dirname(__FILE__) .'/lib/facebook-php-sdk/facebook.php');
 //
-//			$this->facebook_sdk_ref = new Facebook(array(
+//			$this->facebook_sdk_ref = new PWALFacebook(array(
 //		  		'appId'  => $this->options['facebook_api_key'],
 //		  		'secret' => $this->options['facebook_api_secret'],
 //				)
@@ -1057,7 +1057,7 @@ class PayWithaLike {
 			try {
 				$this->facebook_user_profile = $this->facebook_sdk_ref->api('/me','GET');
 				
-			} catch(FacebookApiException $e) {
+			} catch(PWALFacebookApiException $e) {
 				//echo "ERROR:<pre>"; print_r($e); echo "</pre>";
 				return false;
 			}
@@ -2402,7 +2402,17 @@ class PayWithaLike {
 									//echo "facebook_fan_page_urls<pre>"; print_r( $_POST['pwal']['facebookfan_page_urls'] ); echo "</pre>";
 									//include_once( dirname(__FILE__) .'/lib/facebook-php-sdk/facebook.php');
 	
-									$facebook = new Facebook(array(
+									if (!class_exists('PWALBaseFacebook')) {
+										//error_log('loading PWALBaseFacebook');
+										include_once( dirname(__FILE__) .'/lib/facebook-php-sdk/base_facebook.php');
+									} 
+									
+									if (!class_exists('PWALFacebook')) {
+										//error_log('loading PWALFacebook');
+										include_once( dirname(__FILE__) .'/lib/facebook-php-sdk/facebook.php');
+									} 
+	
+									$facebook = new PWALFacebook(array(
 										'appId'  => $this->options['facebook_api_key'],
 										'secret' => $this->options['facebook_api_secret'],
 										'cookie' => true, 
@@ -2450,7 +2460,7 @@ class PayWithaLike {
 													}
 												} 
 			
-											 } catch (FacebookApiException $e) {
+											 } catch (PWALFacebookApiException $e) {
 												 //echo "Exception<pre>"; print_r($e); echo "</pre>";
 											 }
 										 }

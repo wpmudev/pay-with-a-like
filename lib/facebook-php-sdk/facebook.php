@@ -15,13 +15,13 @@
  * under the License.
  */
 
-require_once "base_facebook.php";
+//require_once "base_facebook.php";
 
 /**
- * Extends the BaseFacebook class with the intent of using
+ * Extends the PWALBaseFacebook class with the intent of using
  * PHP sessions to store user ids and access tokens.
  */
-class Facebook extends BaseFacebook
+class PWALFacebook extends PWALBaseFacebook
 {
   const FBSS_COOKIE_NAME = 'fbss';
 
@@ -42,7 +42,7 @@ class Facebook extends BaseFacebook
    * accepts "sharedSession" as a boolean to turn on a secondary
    * cookie for environments with a shared session (that is, your app
    * shares the domain with other apps).
-   * @see BaseFacebook::__construct in facebook.php
+   * @see PWALBaseFacebook::__construct in facebook.php
    */
   public function __construct($config) {
     if (!session_id()) {
