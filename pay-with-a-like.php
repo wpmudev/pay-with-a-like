@@ -3,7 +3,7 @@
 Plugin Name: Pay With a Like
 Description: Allows protecting posts/pages until visitor likes the page or parts of the page with Facebook, Linkedin, Twitter or Google +1.
 Plugin URI: http://premium.wpmudev.org/project/pay-with-a-like
-Version: 2.0.0.9
+Version: 2.0.1
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 TextDomain: pwal
@@ -35,21 +35,23 @@ if ( !class_exists( 'PayWithaLike' ) ) {
 
 class PayWithaLike {
 
-	var $version			=	"2.0.0.8";
-	var $pwal_js_data 		= 	array();
-	var $_pagehooks 		= 	array();
-	var $_options_defaults 	= 	array();
-	var $options 			= 	array();
+	var $version					=	"2.0.1";
+	var $pwal_js_data 				= 	array();
+	var $_pagehooks 				= 	array();
+	var $_options_defaults 			= 	array();
+	var $options 					= 	array();
 
 	var $doing_set_cookie;
-	var $cookie_key			=	'pay_with_a_like';
-	var $cookies			= 	array();
+	var $cookie_key					=	'pay_with_a_like';
+	var $cookies					= 	array();
 
 	var $facebook_sdk_ref;
 	var $facebook_user_profile;
 	
 	var $_registered_scripts		= array();	
 	var $_registered_styles			= array();		
+	
+	var $sitewide_id;
 	
 	/**
      * Constructor
@@ -61,6 +63,9 @@ class PayWithaLike {
 		$this->plugin_url = plugins_url( '/' . $this->plugin_name );
 		$this->page = 'settings_page_' . $this->plugin_name;
 		$this->doing_set_cookie = false;
+
+		$this->sitewide_id				= defined('PWAL_SITEWIDE_ID') ? PWAL_SITEWIDE_ID : 'XXX123456789';
+		
 
 		$this->facebook_sdk_ref = false;
 		$this->facebook_user_profile = false;
@@ -455,21 +460,84 @@ class PayWithaLike {
 
 	function pwal_shortcode($atts, $content = null) {
 		//echo "DEBUG: in ". __FUNCTION__ .": ". __LINE__ ."<br />";
-		//echo "atts<pre>"; print_r($atts); echo "</pre>";
+		//echo "atts (before)<pre>"; print_r($atts); echo "</pre>";
 		//echo "content[". $content ."]<br />";
-		
+				
 		$default_atts = array(
 			'id'				=>	'',
 			'post_id'			=>	'',
 			'wpautop'			=>	'yes',
-			'content_reload'	=>	$this->options['content_reload'],
-			'container_width'	=>	$this->options['container_width'],
-			'description'		=>	$this->options['description']
+			'content_reload'	=>	'', 
+			'container_width'	=>	'', 
+			'description'		=>	'' 
 		);
 		$atts = shortcode_atts( $default_atts, $atts );
 		$atts['method'] = 'tool';
 		$atts['content_id'] = $atts['id'];
 		unset($atts['id']);
+
+		// IF there is no hidden content. Then no point continuing.
+		if ((!$content) || (empty($content))) return '';
+								
+		// We need to see if we are here from a post_content shortcode or some template calling do_shortcode
+		//$post_id = 0;
+
+		if (empty($atts['post_id'])) {
+			global $post;
+		
+			if ((isset($post->post_content)) && (!empty($post->post_content)) && (has_shortcode( $post->post_content, 'pwal' ))) {
+		
+				$pattern = get_shortcode_regex();
+				preg_match_all( '/'. $pattern .'/s', $post->post_content, $matches, PREG_SET_ORDER );
+				if (!empty($matches)) {
+					//echo "matches<pre>"; print_r($matches); echo "</pre>";
+					foreach($matches as $match_set) {
+						if ($match_set[2] = 'pwal') {
+							$shortcode_atts = shortcode_parse_atts( $match_set[3] );
+							//echo "shortcode_atts<pre>"; print_r($shortcode_atts); echo "</pre>";
+							if ((is_array($shortcode_atts)) && (isset($shortcode_atts['id'])) 
+							 && ($shortcode_atts['id'] == $atts['content_id'])) {
+								$atts['post_id'] = $post->ID;
+								break;
+							}
+						}
+					}
+				}
+			} 
+		}
+		
+		if (!empty($atts['post_id'])) {
+			if ((!isset($atts['description'])) || (empty($atts['description']))) {
+				$description = get_post_meta( $atts['post_id'], 'pwal_description', true );
+				if (!empty($description)) {
+					$atts['description'] = $description;
+				}
+			}
+		
+			if ((!isset($atts['content_reload'])) || (empty($atts['content_reload']))) {
+				$content_reload = get_post_meta( $post->ID, 'pwal_content_reload', true );
+				if (!empty($content_reload)) {
+					$atts['content_reload'] = $content_reload;
+				}
+			}
+
+			if ((!isset($atts['container_width'])) || (empty($atts['container_width']))) {
+				$container_width = get_post_meta( $post->ID, 'pwal_container_width', true );
+				if (!empty($container_width)) {
+					$atts['container_width'] = $container_width;
+				}
+			}
+		}
+
+		if ((!isset($atts['description'])) || (empty($atts['description']))) {
+			$atts['description'] = $this->options['description'];
+		}
+		if ((!isset($atts['content_reload'])) || (empty($atts['content_reload']))) {
+			$atts['content_reload'] = $this->options['content_reload'];
+		}
+		if ((!isset($atts['container_width'])) || (empty($atts['container_width']))) {
+			$atts['container_width'] = $this->options['container_width'];
+		}
 		
 		if (!defined( 'DOING_AJAX' ) || !DOING_AJAX) {
 			if ($this->pwal_js_data['debug'] == 'true') {
@@ -477,89 +545,147 @@ class PayWithaLike {
 			}
 		}
 		
-		if ((!$content) || (empty($content))) return '';
-		$content = stripslashes($content);
-		if ($atts['wpautop'] == 'yes') {
-			$content = wpautop($content);
-		}
-		//$content = str_replace(']]>', ']]&gt;', $content);
-						
-		// We need to see if we are here from a post_content shortcode or some template calling do_shortcode
-		//$post_id = 0;
-
-		global $post;
-		
-		if ((isset($post->post_content)) && (!empty($post->post_content)) && (has_shortcode( $post->post_content, 'pwal' ))) {
-		
-			$pattern = get_shortcode_regex();
-			preg_match_all( '/'. $pattern .'/s', $post->post_content, $matches, PREG_SET_ORDER );
-			if (!empty($matches)) {
-				//echo "matches<pre>"; print_r($matches); echo "</pre>";
-				foreach($matches as $match_set) {
-					if ($match_set[2] = 'pwal') {
-						$shortcode_atts = shortcode_parse_atts( $match_set[3] );
-						//echo "shortcode_atts<pre>"; print_r($shortcode_atts); echo "</pre>";
-						if ((is_array($shortcode_atts)) && (isset($shortcode_atts['id'])) 
-						 && ($shortcode_atts['id'] == $atts['content_id'])) {
-							$atts['post_id'] = $post->ID;
-							break;
-						}
-					}
+		if (!empty($atts['post_id'])) {
+			$display_buttons = $this->can_display_buttons($post);
+			if (!defined( 'DOING_AJAX' ) || !DOING_AJAX) {
+				if ($this->pwal_js_data['debug'] == 'true') {
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": can_display_buttons returned". var_dump($display_buttons, true);
 				}
 			}
-		} 
-		//echo "atts<pre>"; print_r($atts); echo "</pre>";
-		
-		
-		if (!empty($atts['post_id'])) {
-			if (!$this->can_display_buttons($post))
-				return $content;
-
-			$description = get_post_meta( $atts['post_id'], 'pwal_description', true );
-			if (!empty($description)) {
-				$atts['description'] = $description;
-			}
-		
-			$content_reload = get_post_meta( $post->ID, 'pwal_content_reload', true );
-			if (!empty($content_reload)) {
-				$atts['content_reload'] = $content_reload;
+		} else {
+			$display_buttons = true;
+		}
+		$display_buttons_filtered = apply_filters('pwal_display_buttons', $display_buttons, $atts['post_id'], $atts['content_id']);
+		if ($display_buttons_filtered != $display_buttons) {
+			if (!defined( 'DOING_AJAX' ) || !DOING_AJAX) {
+				if ($this->pwal_js_data['debug'] == 'true') {
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": pwal_display_buttons filter returned [". var_dump($display_buttons_filtered, true) ."] ";
+				}
 			}
 		}
-		//echo "content_reload[". $atts['content_reload'] ."]<br />";
-
+		if (!$display_buttons) {
+			if (!defined( 'DOING_AJAX' ) || !DOING_AJAX) {
+				if ($this->pwal_js_data['debug'] == 'true') {
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": display_buttons is FALSE returning hidden content.";
+				}
+			}
+			return $this->the_content_filter($content, $atts['wpautop']);
+		}
 
 		// If "Sitewide Like" is selected
 		if ( $this->options["sitewide"] ) {
 			foreach ( $this->cookie_likes['data'] as $like ) {
-				if ( $like["post_id"] == md5( '123456789' . $this->options["salt"] ) ) {
-					return $content;
+				if ( $like["post_id"] == md5( $this->sitewide_id . $this->options["salt"] ) ) {
+					if ($this->pwal_js_data['debug'] == 'true') {
+						echo "PWAL_DEBUG: ". __FUNCTION__ .": sitewide cookie exists<br />";
+					}
+					return $this->the_content_filter($content, $atts['wpautop']);
+				}
+			}
+			if ($this->pwal_js_data['debug'] == 'true')
+				echo "PWAL_DEBUG: ". __FUNCTION__ .": sitewide cookie not found<br />";
+		} else {
+			if ($this->pwal_js_data['debug'] == 'true')
+				echo "PWAL_DEBUG: ". __FUNCTION__ .": option(sitewide): disabled<br />";
+		}
+
+		foreach ( $this->cookie_likes['data'] as $like ) {
+			if (!empty($atts['post_id'])) {
+				if ( $like["post_id"] == md5( $atts['post_id'] . $this->options["salt"] ) ) {
+					if ($this->pwal_js_data['debug'] == 'true') {
+						echo "PWAL_DEBUG: ". __FUNCTION__ .": found like cookie for post_id[". $atts['post_id'] ."]<br />";
+					}
+					return $this->the_content_filter($content, $atts['wpautop']);
+				}
+			} else {
+				if ( $like["content_id"] == $atts['content_id'] ) {
+					if ($this->pwal_js_data['debug'] == 'true') {
+						echo "PWAL_DEBUG: ". __FUNCTION__ .": found like cookie for content_id[". $atts['content_id'] ."]<br />";
+					}
+					return $this->the_content_filter($content, $atts['wpautop']);
 				}
 			}
 		}
-		else {
-			foreach ( $this->cookie_likes['data'] as $like ) {
-				if ($atts['post_id'] > 0) {
-					if ( $like["post_id"] == md5( $atts['post_id'] . $this->options["salt"] ) ) {
-						$content = apply_filters( 'the_content', $content );
-						$content = str_replace( ']]>', ']]&gt;', $content );
-						return $content;
-					}
-				} else {
-					if ( $like["content_id"] == $atts['content_id'] ) {
-						$content = apply_filters( 'the_content', $content );
-						$content = str_replace( ']]>', ']]&gt;', $content );
-						return $content;
-					}
-				}
-			}
-		}
+		//if ($this->pwal_js_data['debug'] == 'true') {
+		//	echo "PWAL_DEBUG: ". __FUNCTION__ .": not found like cookie for post_id[". $atts['post_id'] ."]<br />";
+		//}
+		
+		//echo "DEBUG: in ". __FUNCTION__ .": ". __LINE__ ."<br />";
+		//echo "atts<pre>"; print_r($atts); echo "</pre>";
+		//echo "content[". $content ."]<br />";
+		
+		delete_transient('pwal_'.$atts['content_id']);
+		set_transient( 'pwal_'.$atts['content_id'], $content, 1 * HOUR_IN_SECONDS );
 		$pwal_content = '<div id="pwal_content_wrapper_'. $atts['content_id'] .'" class="pwal_content_wrapper">'. $this->render_buttons( $atts ) .'</div>';
 
 		return $pwal_content;
 	}
 
+	function the_content_filter($content, $wpautop = 'yes') {
+		
+		$content = stripslashes($content);
+		if ((has_filter('the_content', 'wpautop')) && ($wpautop == 'no')) {
+			$wpautop_org_state = true;
+			remove_filter( 'the_content', 'wpautop' );
+		} else if ((!has_filter('the_content', 'wpautop')) && ($wpautop == 'yes')) {
+			$wpautop_org_state = false;
+			add_filter( 'the_content', 'wpautop' );
+		}
+		$content = apply_filters( 'the_content', $content );
+		$content = str_replace( ']]>', ']]&gt;', $content );
+
+		if ($wpautop_org_state == true) {
+			add_filter( 'the_content', 'wpautop' );
+		} else if ($wpautop_org_state == false) {
+			remove_filter( 'the_content', 'wpautop' );
+		}
+		return $content;
+	}
+	
+	
 	function can_display_buttons($post) {
 		
+		// Show the bot full content, if selected so
+		if ($this->options["bot"] == 'true') {
+			if ($this->pwal_js_data['debug'] == 'true')
+				echo "PWAL_DEBUG: ". __FUNCTION__ .": option(bot): true<br />";
+
+			if ($this->is_bot()) {
+				if ($this->pwal_js_data['debug'] == 'true')
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": is_bot: true<br />";
+				return false;
+			} else {
+				if ($this->pwal_js_data['debug'] == 'true')
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": is_bot: false<br />";
+			}
+		} else {
+			if ($this->pwal_js_data['debug'] == 'true')
+				echo "PWAL_DEBUG: ". __FUNCTION__ .": option(bot): false<br />";
+		}
+
+		if ( $this->options["sitewide"] ) {
+			if ($this->pwal_js_data['debug'] == 'true')
+				echo "PWAL_DEBUG: ". __FUNCTION__ .": option(sitewide): enabled<br />";
+
+			$post_id = $this->sitewide_id;
+			// Check if this post is liked or sitewide like is selected
+			foreach ( $this->cookie_likes['data'] as $like ) {
+				// Cookie is already encrypted, so we are looking if post_id matches to the encryption 
+				if ( $like["post_id"] == md5( $post_id . $this->options["salt"] ) ) { 
+					
+					if ($this->pwal_js_data['debug'] == 'true')
+						echo "PWAL_DEBUG: ". __FUNCTION__ .": sitewide cookie exists<br />";
+					
+					return false;
+				}
+			}
+			if ($this->pwal_js_data['debug'] == 'true')
+				echo "PWAL_DEBUG: ". __FUNCTION__ .": sitewide cookie not found<br />";
+		} else {
+			if ($this->pwal_js_data['debug'] == 'true')
+				echo "PWAL_DEBUG: ". __FUNCTION__ .": option(sitewide): disabled<br />";
+		}
+	
 		if (get_current_user_id()) {
 			global $current_user;
 			
@@ -579,15 +705,6 @@ class PayWithaLike {
 					if ($this->pwal_js_data['debug'] == 'true')
 						echo "PWAL_DEBUG: ". __FUNCTION__ .": current user is not admin/super admin<br />";
 				}
-			}
-
-			// Show the bot full content, if selected so
-			//echo "bot[". $this->options["bot"] ."]<br />";
-			if ( ($this->options["bot"] == 'true') && ($this->is_bot()) ) {
-				if ($this->pwal_js_data['debug'] == 'true')
-					echo "PWAL_DEBUG: ". __FUNCTION__ .": option(bot): true<br />";
-				
-				return false;
 			}
 			
 			//echo "authorized[". $this->options['authorized'] ."]<br />";
@@ -626,7 +743,25 @@ class PayWithaLike {
 			'post_type'	=>	false
 		);
 
-		if (is_object( $post )) {
+		if ((is_object( $post )) && isset($post->ID) && ($post->ID > 0)) {
+			if ($this->pwal_js_data['debug'] == 'true') {
+				echo "PWAL_DEBUG: ". __FUNCTION__ .": post->ID: [". $post->ID ."]<br />";
+			}
+			
+			// Check if this post is liked or sitewide like is selected
+			foreach ( $this->cookie_likes['data'] as $like ) {
+				// Cookie is already encrypted, so we are looking if post_id matches to the encryption 
+				if ( $like["post_id"] == md5( $post->ID . $this->options["salt"] ) ) { 
+					if ($this->pwal_js_data['debug'] == 'true') {
+						echo "PWAL_DEBUG: ". __FUNCTION__ .": found like cookie for post_id[". $post->ID ."]<br />";
+					}
+					return false;
+				}
+			}
+			if ($this->pwal_js_data['debug'] == 'true') {
+				echo "PWAL_DEBUG: ". __FUNCTION__ .": not found like cookie for post_id[". $post->ID ."]<br />";
+			}
+			
 			if (get_post_meta( $post->ID, 'pwal_enable', true ) == 'enable') {
 				$post_info['post'] = true;
 			}
@@ -634,9 +769,6 @@ class PayWithaLike {
 			if (isset($this->options['post_types'][$post->post_type])) {
 				$post_info['post'] = true;
 			}
-		}
-		if ($this->pwal_js_data['debug'] == 'true') {
-			echo "post_info<pre>"; print_r($post_info); echo "</pre>";
 		}
 		
 		if ( is_singular($this->options['post_types'])) {
@@ -662,6 +794,10 @@ class PayWithaLike {
 				if ($this->pwal_js_data['debug'] == 'true') {
 					echo "PWAL_DEBUG: ". __FUNCTION__ .": post is enabled<br />";
 				}
+			}
+
+			if ($this->pwal_js_data['debug'] == 'true') {
+				echo "post_info<pre>"; print_r($post_info); echo "</pre>";
 			}
 
 			if (($post_info['post'] != true) && ($post_info['post_type'] != true))
@@ -791,49 +927,32 @@ class PayWithaLike {
 		
 		
 		$display_buttons = $this->can_display_buttons($post);
-		$display_buttons = apply_filters('pwal_display_buttons', $display_buttons, $post->ID);
+		$display_buttons = apply_filters('pwal_display_buttons', $display_buttons, $post->ID, $post->ID);
 		if (!$display_buttons)
 			return $content;
 		
 			
-		//echo "DEBUG: in ". __FUNCTION__ .": ". __LINE__ ."<br />";
-		
-		// FPM: Not really sure what the below is supposed to do. 
-		//if (!defined( 'DOING_AJAX' ) || !DOING_AJAX) {
-		//	// If caching is allowed no need to continue
-		//	if ( !$force ) {
-		//		return $this->clear($content);
-		//	}
-		//}
-		
-		//echo "DEBUG: in ". __FUNCTION__ .": ". __LINE__ ."<br />";
-		
-		//echo "post<pre>"; print_r($post); echo "</pre>";
-		
-		//echo "DEBUG: in ". __FUNCTION__ .": ". __LINE__ ."<br />";
 		$pwal_enable = $this->is_content_enabled( $post->ID );
-		//echo "pwal_enable[". $pwal_enable ."]<br />";
 		if ($pwal_enable != 'enable') {
 			return $this->clear($content);
 		}
 				
-			
 		// If user liked, show content. 'Tool' option has its own logic
 
 		// "sitewide like" is selected
-		if ( $this->options["sitewide"] )
-			$post_id = 123456789;
-		else
-			$post_id = $post->ID;
+//		if ( $this->options["sitewide"] )
+//			$post_id = $this->sitewide_id;
+//		else
+//			$post_id = $post->ID;
 				
 		// Check if this post is liked or sitewide like is selected
-		foreach ( $this->cookie_likes['data'] as $like ) {
-			// Cookie is already encrypted, so we are looking if post_id matches to the encryption 
-			if ( $like["post_id"] == md5( $post_id . $this->options["salt"] ) ) { 
-				return $this->clear($content);
-				break; 
-			}
-		}
+//		foreach ( $this->cookie_likes['data'] as $like ) {
+//			// Cookie is already encrypted, so we are looking if post_id matches to the encryption 
+//			if ( $like["post_id"] == md5( $post_id . $this->options["salt"] ) ) { 
+//				return $this->clear($content);
+//				break; 
+//			}
+//		}
 		
 		$description = get_post_meta( $post->ID, 'pwal_description', true );
 		if (empty($description))
@@ -873,7 +992,6 @@ class PayWithaLike {
 			$buttons_atts['method'] = 'automatic';
 			
 			$content = preg_replace( '%\[pwal(.*?)\](.*?)\[( *)\/pwal( *)\]%is', '$2', $content ); // Clean shortcode
-			//echo "content[". $content ."]<br />";
 			$temp_arr = explode( " ", $content );
 			
 			// If the article is shorter than excerpt, show full content
@@ -882,10 +1000,7 @@ class PayWithaLike {
 			if ( empty($excerpt_len) ) {
 				$excerpt_len = $this->options["excerpt"];
 			}
-			//echo "DEBUG: in ". __FUNCTION__ .": ". __LINE__ ."<br />";
 			
-			//echo "temp_arr[". count($temp_arr) ."]<br />";
-			//echo "excerpt_len[". $excerpt_len ."]<br />";
 			if ( count( $temp_arr ) <= $excerpt_len ) {
 				if ($this->doing_set_cookie !== true) {
 					return $this->clear($content);
@@ -896,14 +1011,16 @@ class PayWithaLike {
 			
 			// Otherwise prepare excerpt
 			$e = ""; 
-			for ( $n=0; $n<$excerpt_len; $n++ ) {
-				$e .= $temp_arr[$n] . " ";
-			}
-			
-			//$e_arr = array_slice(0, intval($excerpt_len)-1, $temp_arr);
-			//if ($e_arr) {
-			//	$e = join(' ', $e_arr);
+			//for ( $n=0; $n<$excerpt_len; $n++ ) {
+			//	$e .= $temp_arr[$n] . " ";
 			//}
+			//echo "e[". $e ."]<br />";
+			
+			$e_arr = array_slice($temp_arr, 0, intval($excerpt_len)-1);
+			if ($e_arr) {
+				$e = join(' ', $e_arr);
+			}
+			//echo "e[". $e ."]<br />";
 
 
 			// If a tag is broken, try to complete it within reasonable limits, i.e. 50 words
@@ -1150,44 +1267,53 @@ class PayWithaLike {
 		//echo "button_count[". $n ."]<br />";
 		if ( $n == 0 )
 			return; // No button selected. Nothing to do.
-			
-		// If url to like is left empty and Random Like is not selected, take existing post's url
 		
-		// If Random Like is selected, find a random, published post/page
-		if ( $this->options["random"] || apply_filters( 'pwal_force_random', false ) ) {
-			global $wpdb;
+		// Check if the post has a alternate URL to Like
+		$url_to_like = '';
+		if ((isset($atts['post_id'])) && (!empty($atts['post_id']))) {
+			$url_to_like = get_post_meta( $atts['post_id'], 'pwal_url_to_like', true );
+		}
+
+		// If url to like is left empty and Random Like is not selected, take existing post's url
+		if (empty($url_to_like)) {
+		
+			// If Random Like is selected, find a random, published post/page
+			if ( $this->options["random"] || apply_filters( 'pwal_force_random', false ) ) {
+				global $wpdb;
 			
-			if (count($this->options['post_types'])) {
-				$post_types_sql = '';
-				foreach($this->options['post_types'] as $post_type) {
-					if (!empty($post_types_sql)) $post_types_sql .= ',';
-					$post_types_sql .= "'". $post_type ."'";
+				if (count($this->options['post_types'])) {
+					$post_types_sql = '';
+					foreach($this->options['post_types'] as $post_type) {
+						if (!empty($post_types_sql)) $post_types_sql .= ',';
+						$post_types_sql .= "'". $post_type ."'";
+					}
+				}
+			
+				$result = $wpdb->get_row("SELECT * FROM $wpdb->posts WHERE (post_type IN ('. $post_types_sql .')) AND post_status='publish' ORDER BY RAND()");
+				if ( $result != null ) {
+					$url_to_like = get_permalink( $result->ID );
+				} else {
+					return;
+				}
+			} 
+			
+			if (empty($url_to_like)) {
+				if (!empty($this->options["url_to_like"])) {
+					$url_to_like = 	$this->options["url_to_like"];
 				}
 			}
 			
-			$result = $wpdb->get_row("SELECT * FROM $wpdb->posts WHERE (post_type IN ('. $post_types_sql .')) AND post_status='publish' ORDER BY RAND()");
-			if ( $result != null ) {
-				$url_to_like = get_permalink( $result->ID );
-			} else {
-				return;
-			}
-		} else if (!empty($this->options["url_to_like"])) {
-			$url_to_like = 	$this->options["url_to_like"];
-		} else {
-			//echo "here atts<pre>"; print_r($atts); echo "</pre>";
-			if ($atts['post_id']) {
-				$url_to_like = get_permalink( $atts['post_id'] );
-			} else {
-				//$url_to_like = remove_query_arg('PWAL_DEBUG');
-				//echo "_SERVER[REQUEST_URI][". $_SERVER['REQUEST_URL'] ."]<br />";
+			if (empty($url_to_like)) {
+				//echo "here atts<pre>"; print_r($atts); echo "</pre>";
+				if ($atts['post_id']) {
+					$url_to_like = get_permalink( $atts['post_id'] );
+				} else {
+					$url_to_like = add_query_arg('PWAL_DEBUG', '1');
+					$url_to_like = remove_query_arg('PWAL_DEBUG', $url_to_like);
+				}
 			}
 		}
 		
-		if ( empty( $url_to_like )) {
-			if ( !$url_to_like = trim( $this->options["url_to_like"] ) ) {
-				$url_to_like = remove_query_arg('PWAL_DEBUG');
-			}
-		}
 		$url_to_like = remove_query_arg('PWAL_DEBUG', $url_to_like);	
 		$url_to_like = apply_filters( 'pwal_url_to_like', $url_to_like );
 
@@ -1430,7 +1556,7 @@ class PayWithaLike {
 				$pwal_info['reply_data']['errorText']		= '';				
 				
 				if (!isset($pwal_info['post_id'])) {
-					$pwal_info['reply_data']['errorStatus'] 	= true;
+					$pwal_info['reply_data']['errorStatus'] = true;
 					$pwal_info['reply_data']['errorText']	= __('Something went wrong. Please refresh the page and try again. (post_id)', 'pwal');			
 					
 				} else {
@@ -1438,7 +1564,7 @@ class PayWithaLike {
 				}
 				
 				if (!isset($pwal_info['content_id'])) {
-					$pwal_info['reply_data']['errorStatus'] 	= true;
+					$pwal_info['reply_data']['errorStatus'] = true;
 					$pwal_info['reply_data']['errorText']	= __('Something went wrong. Please refresh the page and try again. (content_id)', 'pwal');
 				} else {
 					$pwal_info['content_id'] = intval($pwal_info['content_id']);
@@ -1446,10 +1572,10 @@ class PayWithaLike {
 		
 				if (intval($pwal_info['post_id'])) {
 					$post = get_post(intval($pwal_info['post_id']));
-					if (!$post) {
-						$pwal_info['reply_data']['errorStatus'] 	= true;
-						$pwal_info['reply_data']['errorText']	= __('Something went wrong. Please refresh the page and try again. (invalid post_id)', 'pwal');			
-					}		
+					//if (!$post) {
+					//	$pwal_info['reply_data']['errorStatus'] 	= true;
+					//	$pwal_info['reply_data']['errorText']	= __('Something went wrong. Please refresh the page and try again. (invalid post_id)', 'pwal');			
+					//}		
 				} else {
 					// In the rare cases where the post_id is zero like when using the pwal template or shortcode outside of at post...
 					// We set the post_id to be the value of the content_id since that is ALWAYS present.
@@ -1474,18 +1600,21 @@ class PayWithaLike {
 	
 	function handle_button_cookie($pwal_info) {
 		
-//		echo "pwal_info<pre>"; print_r($pwal_info); echo "</pre>";
+		//echo "pwal_info<pre>"; print_r($pwal_info); echo "</pre>";
+		//echo "options<pre>"; print_r($this->options); echo "</pre>";
 		
 		$new_like = array(
 			'content_id' 	=> $pwal_info['content_id'],
 			'post_id'		=> md5( $pwal_info['post_id'] . $this->options["salt"] )
 		);
+		//echo "new_like<pre>"; print_r($new_like); echo "</pre>";
 		
 		// Always save the "sitewide like" thing
 		$new_like_sitewide = array(
-			'content_id' 	=> $pwal_info['content_id'],
-			'post_id'		=> md5( 123456789 . $this->options["salt"] )
+			'content_id' 	=> $this->sitewide_id,
+			'post_id'		=> md5( $this->sitewide_id . $this->options["salt"] )
 		);
+		//echo "new_like_sitewide<pre>"; print_r($new_like_sitewide); echo "</pre>";
 		
 		// Check if user has got likes saved in the cookie
 
@@ -1505,12 +1634,14 @@ class PayWithaLike {
 		//echo "DEBUG: duplicate[". $duplicate ."]<br />";
 		//die();
 		
+		// IF we don't have a duplicate for the liked item we add it.
 		if ( !$duplicate )
 			$this->cookie_likes['data'][$new_like['content_id']] = $new_like;
 		
+		
+		/** Now processing the Sitewide Like cookie. We always add this  */
 		$duplicate_sitewide = false;
 		foreach ( $this->cookie_likes['data'] as $like ) {
-			//if ( isset( $like['post_id'] ) && $like['post_id'] == $new_like_sitewide['content_id'] ) {
 			if ( isset( $like['content_id'] ) && $like['content_id'] == $new_like_sitewide['content_id'] ) {
 				$duplicate_sitewide = true;
 				break;
@@ -1617,12 +1748,13 @@ class PayWithaLike {
 	}
 	
 	function handle_button_statistics($pwal_info) {
-		if (!empty($pwal_info["service"])) { 
+		if ((isset($pwal_info["service"])) && (!empty($pwal_info["service"]))) {
+		
 			// We can handle statistics here, as this is ajax request and it will not affect performance
 			$statistics = get_option( "pwal_statistics" );
 			if ( !is_array( $statistics  ) )
 				$statistics = array();
-		
+	
 			global $blog_id;
 
 			// Let's try to be economical in key usage
@@ -1634,11 +1766,11 @@ class PayWithaLike {
 							'i'		=> $_SERVER['REMOTE_ADDR'],
 							't'		=> current_time('timestamp')
 							);
-						
+					
 			$statistics = apply_filters( "pwal_ajax_statistics", $statistics, $pwal_info["post_id"], $pwal_info["service"] );
-						
+					
 			update_option( "pwal_statistics", $statistics );
-		}		
+		}
 	}
 	
 	function handle_button_content($pwal_info, $post) {
@@ -1648,42 +1780,59 @@ class PayWithaLike {
 		//echo "in ". __FUNCTION__ ."<br />";
 		//echo "pwal_info<pre>"; print_r($pwal_info); echo "</pre>";
 		//echo "post_content[". $post->post_content ."]<br />";
+		
 		if ((isset($pwal_info['content_reload'])) && ($pwal_info['content_reload'] == "ajax")) {
 			if ((isset($pwal_info['method'])) && ($pwal_info['method'] == 'tool')) {
-				$pwal_info['content'] = '';
+
+				//$pwal_info['content'] = '';
+				//if ((is_object($post)) && (has_shortcode( $post->post_content, 'pwal' ))) {
+				//
+				//	$pattern = get_shortcode_regex();
+				//	preg_match_all( '/'. $pattern .'/s', $post->post_content, $matches, PREG_SET_ORDER );
+				//	if (!empty($matches)) {
+				//		//echo "matches<pre>"; print_r($matches); echo "</pre>";
+				//		foreach($matches as $match_set) {
+				//			if ($match_set[2] = 'pwal') {
+				//				$shortcode_atts = shortcode_parse_atts( $match_set[3] );
+				//				//echo "shortcode_atts<pre>"; print_r($shortcode_atts); echo "</pre>";
+				//				if ((is_array($shortcode_atts)) && (isset($shortcode_atts['id'])) 
+				//				 && ($shortcode_atts['id'] == $pwal_info['content_id'])) {
+			 	//					//echo "matches<pre>"; print_r($matches); echo "</pre>";
+				//					 
+				//					$content = $this->pwal_shortcode($shortcode_atts, $match_set[5]);
+				//					//$content = $match_set[5];
+				//					//if ($shortcode_atts['wpautop'] == 'yes') {
+				//					//	$content = wpautop($content);
+				//					//}
+				//					
+				//					break;
+				//				}
+				//			}
+				//		}
+				//	}
+				//} else {
+				//	
+				//}
+
+				$trans_key = 'pwal_'. trim($pwal_info['content_id']);
+				//echo "trans_key[". $trans_key ."]<br />";
+				$content = get_transient( $trans_key );
 				
-				if (has_shortcode( $post->post_content, 'pwal' )) {
+				//echo "content from transient [". $content ."]<br />";
 				
-					$pattern = get_shortcode_regex();
-					preg_match_all( '/'. $pattern .'/s', $post->post_content, $matches, PREG_SET_ORDER );
-					if (!empty($matches)) {
-						//echo "matches<pre>"; print_r($matches); echo "</pre>";
-						foreach($matches as $match_set) {
-							if ($match_set[2] = 'pwal') {
-								$shortcode_atts = shortcode_parse_atts( $match_set[3] );
-								//echo "shortcode_atts<pre>"; print_r($shortcode_atts); echo "</pre>";
-								if ((is_array($shortcode_atts)) && (isset($shortcode_atts['id'])) 
-								 && ($shortcode_atts['id'] == $pwal_info['content_id'])) {
-			 						//echo "matches<pre>"; print_r($matches); echo "</pre>";
-									 
-									$content = $this->pwal_shortcode($shortcode_atts, $match_set[5]);
-									//$content = $match_set[5];
-									//if ($shortcode_atts['wpautop'] == 'yes') {
-									//	$content = wpautop($content);
-									//}
-									
-									break;
-								}
-							}
-						}
-					}
+				if (!empty($content)) {
+					$content = apply_filters('the_content', $content);
+					//echo "content after filters [". $content ."]<br />";
 				}
+				
+				if (!empty($content)) {
+					$content = str_replace(']]>', ']]&gt;', $content);
+					//echo "content after str_replace [". $content ."]<br />";
+				}
+				
 			} else {
-				//echo "in here<br />";
 				$content = apply_filters('the_content', $post->post_content);
-				//echo "content[". $content ."]<br />";
 				$content = str_replace(']]>', ']]&gt;', $content);
-				//echo "content[". $content ."]<br />";
 			}
 		}
 		return $content;
@@ -1801,8 +1950,9 @@ class PayWithaLike {
 		
 		$pwal_excerpt = get_post_meta( $post->ID, 'pwal_excerpt', true );
 		?>	
-		<p id="section_pwal_excerpt"><label for="pwal_excerpt"><?php _e('Excerpt length (words)', 'pwal') ?></label> <span class="pwal-global-value"><?php echo __('Default', 'pwal'). ': '. $global_excerpt_length ?><br />
-		<input type="text" name="pwal_excerpt" id="pwal_excerpt" value="<?php echo $pwal_excerpt; ?>" /></p>
+		<p id="section_pwal_excerpt"><label for="pwal_excerpt"><?php _e('Excerpt length (words)', 'pwal') ?></label><br />
+		<input type="text" name="pwal_excerpt" id="pwal_excerpt" value="<?php echo $pwal_excerpt; ?>" /><br />
+		<span class="pwal-global-value description"><?php echo __('Default', 'pwal'). ': '. $global_excerpt_length ?></span></p>
 		
 		<?php
 
@@ -1813,9 +1963,20 @@ class PayWithaLike {
 		$pwal_container_width = get_post_meta( $post->ID, 'pwal_container_width', true );
 			
 		?>	
-		<p id="section_pwal_container_width"><label for="pwal_container_width"><?php _e('Button Container Width', 'pwal') ?></label> <span class="pwal-global-value"><?php echo __('Default', 'pwal'). ': '. $global_container_width ?><br />
-		<input type="text" name="pwal_container_width" id="pwal_container_width" value="<?php echo $pwal_container_width; ?>" /></p>
+		<p id="section_pwal_container_width"><label for="pwal_container_width"><?php _e('Button Container Width', 'pwal') ?></label><br />
+		<input type="text" name="pwal_container_width" id="pwal_container_width" value="<?php echo $pwal_container_width; ?>" /><br />
+		<span class="pwal-global-value description"><?php echo __('Default', 'pwal'). ': '. $global_container_width ?></span></p>
 		<?php
+
+		$pwal_url_to_like = get_post_meta( $post->ID, 'pwal_url_to_like', true );
+		?>	
+		<p id="section_pwal_url_to_like"><label for="pwal_url_to_like"><?php _e('Alt. URL to Like', 'pwal') ?> </label><br />
+		<input type="text" name="pwal_url_to_like" id="pwal_url_to_like" value="<?php echo $pwal_url_to_like; ?>" /><br />
+		<span class="pwal-global-value description"><?php echo __('If blank current post URL is used', 'pwal') ?></span></p>
+		<?php
+
+
+
 
 		$global_reload_val 		= 	'global_'. strtolower( $this->options['content_reload'] );
 		
@@ -1845,8 +2006,9 @@ class PayWithaLike {
 
 		$pwal_description = get_post_meta( $post->ID, 'pwal_description', true );
 		?>
-		<p id="section_pwal_description"><label for="pwal_description"><?php _e('Description (if blank global setting is used)', 'pwal') ?></label><br />
-		<textarea name="pwal_description" id="pwal_description"><?php echo $pwal_description ?></textarea></p>
+		<p id="section_pwal_description"><label for="pwal_description"><?php _e('Description', 'pwal') ?></label><br />
+		<textarea name="pwal_description" id="pwal_description"><?php echo $pwal_description ?></textarea><br />
+		<span class="pwal-global-value description"><?php echo __('If blank global setting is used', 'pwal') ?></span></p>
 		<?php
 	}
 	
@@ -1870,18 +2032,23 @@ class PayWithaLike {
 
 		// Check permissions
 		if ( 'page' == $_POST['post_type'] ) {
-			if ( !current_user_can( 'edit_page', $post_id ) ) 
+			if ( !current_user_can( 'edit_page', $post_id ) ) {
 				return $post_id;
+			}
 		}
 		elseif ( !current_user_can( 'edit_post', $post_id ) ) 
 			return $post_id;
 
 		// Auth ok
+		
 		if ( isset( $_POST['pwal_enable'] ) ) {
-			if (( $_POST['pwal_enable'] == 'enable' ) || ( $_POST['pwal_enable'] == 'disable' ))
+			if (( $_POST['pwal_enable'] == 'enable' ) || ( $_POST['pwal_enable'] == 'disable' )) {
 				update_post_meta( $post_id, 'pwal_enable', esc_attr($_POST['pwal_enable']) );
-			else
+			} else {
 				delete_post_meta( $post_id, 'pwal_enable' );
+			}
+		} else {
+			delete_post_meta( $post_id, 'pwal_enable' );
 		}
 		
 		//echo "pwal_method[". $_POST['pwal_method'] ."]<br />";
@@ -1889,34 +2056,52 @@ class PayWithaLike {
 		if ( isset( $_POST['pwal_method'] ) ) {
 			if (( $_POST['pwal_method'] == 'automatic' ) || ( $_POST['pwal_method'] == 'manual' ) || ( $_POST['pwal_method'] == 'tool' )) {
 				update_post_meta( $post_id, 'pwal_method', esc_attr($_POST['pwal_method']) );
-				//echo "in save<br />";
 			} else {
 				delete_post_meta( $post_id, 'pwal_method' );
-				//echo "in delete<br />";
 			}
 		}
 		//die();
 		
 		if ( isset( $_POST['pwal_excerpt'] ) ) {
-			if ( !empty($_POST['pwal_excerpt']) )
+			if ( !empty($_POST['pwal_excerpt']) ) {
 				update_post_meta( $post_id, 'pwal_excerpt', intval($_POST['pwal_excerpt']) );
-			else
+			} else {
 				delete_post_meta( $post_id, 'pwal_excerpt' );
+			}
+		} else {
+			delete_post_meta( $post_id, 'pwal_excerpt' );
+		}
+
+		if ( isset( $_POST['pwal_url_to_like'] ) ) {
+			if ( $_POST['pwal_url_to_like'] != '') {
+				update_post_meta( $post_id, 'pwal_url_to_like', esc_url($_POST['pwal_url_to_like']) );
+			} else {
+				delete_post_meta( $post_id, 'pwal_url_to_like' );
+			}
+		} else {
+			delete_post_meta( $post_id, 'pwal_url_to_like' );
 		}
 		
 		if ( isset( $_POST['pwal_container_width'] ) ) {
-			if ( $_POST['pwal_container_width'] != '')
+			if ( $_POST['pwal_container_width'] != '') {
 				update_post_meta( $post_id, 'pwal_container_width', esc_attr($_POST['pwal_container_width']) );
-			else
+			} else {
 				delete_post_meta( $post_id, 'pwal_container_width' );
+			}
+		} else {
+			delete_post_meta( $post_id, 'pwal_container_width' );
 		}
 
 		if ( isset( $_POST['pwal_content_reload'] ) ) {
-			if ( ($_POST['pwal_content_reload'] == 'ajax') || ( $_POST['pwal_content_reload'] == 'refresh' ) )
+			if ( ($_POST['pwal_content_reload'] == 'ajax') || ( $_POST['pwal_content_reload'] == 'refresh' ) ) {
 				update_post_meta( $post_id, 'pwal_content_reload', esc_attr($_POST['pwal_content_reload']) );
-			else
+			} else {
 				delete_post_meta( $post_id, 'pwal_content_reload' );
+			}
+		} else {
+			delete_post_meta( $post_id, 'pwal_content_reload' );
 		}
+
 
 		if ( isset( $_POST['pwal_description'] ) ) {
 			if ( $_POST['pwal_description'] != '') {
@@ -1924,6 +2109,8 @@ class PayWithaLike {
 			} else {
 				delete_post_meta( $post_id, 'pwal_description' );				
 			}
+		} else {
+			delete_post_meta( $post_id, 'pwal_description' );				
 		}
 	}
 	
@@ -2290,22 +2477,6 @@ class PayWithaLike {
 										$this->options['load_google']						= '';
 								}
 
-
-								if (isset($_POST['pwal']['sitewide']))
-									$this->options['sitewide']							= $_POST['pwal']['sitewide'];
-								else
-									$this->options['sitewide']							= '';
-
-								if (isset($_POST['pwal']['url_to_like']))
-									$this->options['url_to_like']						= esc_url($_POST['pwal']['url_to_like']);
-								else
-									$this->options['url_to_like']						= '';
-
-								if (isset($_POST['pwal']['random']))
-									$this->options['random']							= $_POST['pwal']['random'];
-								else
-									$this->options['random']							= '';
-
 								break;
 			
 							case 'facebook':
@@ -2633,6 +2804,22 @@ class PayWithaLike {
 					if (isset($_POST['pwal']['cookie']))
 						$this->options['cookie']							= intval($_POST['pwal']['cookie']);
 
+					
+					if (isset($_POST['pwal']['sitewide']))
+						$this->options['sitewide']							= $_POST['pwal']['sitewide'];
+					else
+						$this->options['sitewide']							= '';
+
+					if (isset($_POST['pwal']['url_to_like']))
+						$this->options['url_to_like']						= esc_url($_POST['pwal']['url_to_like']);
+					else
+						$this->options['url_to_like']						= '';
+
+					if (isset($_POST['pwal']['random']))
+						$this->options['random']							= $_POST['pwal']['random'];
+					else
+						$this->options['random']							= '';
+					
 					
 					break;
 				
@@ -3227,7 +3414,7 @@ if ( !function_exists( 'wpmudev_pwal_check_liked' ) ) {
 		
 		// "sitewide like" is selected
 		if ( $pwal->options["sitewide"] )
-			$post_id = 123456789;
+			$post_id = $this->sitewide_id;
 		else
 			$post_id = $pwal_id;
 		

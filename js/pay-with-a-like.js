@@ -84,9 +84,11 @@ var wpmudev_pwal = jQuery.extend(wpmudev_pwal || {}, {
 				}
 			}
 			
-			if (Object.keys(pwal_info_items).length > 0) {
+			pwal_info_items = wpmudev_pwal.handle_sitewide(pwal_info_items);
+			
+			//if (Object.keys(pwal_info_items).length > 0) {
 				wpmudev_pwal.handle_buttons(pwal_info_items);
-			}
+			//}
 		}
 	},
 	register_button_href: function(pwal_id, pwal_post_id, pwal_href) {
@@ -169,97 +171,129 @@ var wpmudev_pwal = jQuery.extend(wpmudev_pwal || {}, {
 		var pwal_info_items = {};
 		var pwal_id = pwal_info['content_id'];
 		pwal_info_items[pwal_id] = pwal_info;
+		
+		//pwal_info_items = wpmudev_pwal.handle_sitewide(pwal_info_items);
+		console.log('pwal_info_items [%o]', pwal_info_items);
+		//console.log('buttons [%o]', wpmudev_pwal.buttons);
+		
 		wpmudev_pwal.handle_buttons(pwal_info_items);
 		
+	},
+	handle_sitewide: function(pwal_info_items) {
+
+		// If site has enabled sitewide likes then we need to pass in all the visible PWAL button
+		if (pwal_data.options['sitewide'] == 'true') {
+			for (var pwal_id in wpmudev_pwal.buttons) {
+				if (!wpmudev_pwal.buttons.hasOwnProperty(pwal_id)) continue;
+				
+				var pwal_button = wpmudev_pwal.buttons[pwal_id];
+				
+				// We don't add the same the one we already added.
+				if (pwal_info_items[pwal_id] == undefined) {
+					//pwal_button['service'] = pwal_info['service'];
+
+					if (pwal_data.debug == "true") {
+						console.log('handle_sitewide: adding button: [%o]', pwal_info_items);
+					}
+					
+					pwal_info_items[pwal_id] = pwal_button;
+				}
+			}
+		}
+		return pwal_info_items;
 	},
 	/* Handler for multiple buttons. Generally called by 'handle_button'. But also called directly from the Facebook functions below */
 	handle_buttons: function(pwal_info_items) {
 		
+		pwal_info_items = wpmudev_pwal.handle_sitewide(pwal_info_items);
+
 		if (pwal_data.debug == "true") {
-			console.log('handle_button: pwal_info_items [%o]', pwal_info_items);				
+			console.log('handle_buttons: pwal_info_items [%o]', pwal_info_items);				
 		} 	
+
+		if (Object.keys(pwal_info_items).length > 0) {
 		
-		jQuery.ajax({
-			type: "POST",
-			url: pwal_data['ajax_url'],
-			dataType: "json",
-			cache: false,
-			data: {  
-			    'action': 'pwal_buttons_action',
-				'pwal_info_items': pwal_info_items,
-				'nonce': pwal_data['ajax-nonce'],
-				'debug': pwal_data.debug
-			},
-			error: function(jqXHR, textStatus, errorThrown ) {
-				console.log('handle_button: error HTTP Status['+jqXHR.status+'] '+errorThrown);					
-			},
-			success: function(reply_data) {
-				if (reply_data != undefined) {
-					if (pwal_data.debug == "true") {
-						console.log('handle_button: reply_data[%o]', reply_data);
-					}
+			jQuery.ajax({
+				type: "POST",
+				url: pwal_data['ajax_url'],
+				dataType: "json",
+				cache: false,
+				data: {  
+				    'action': 'pwal_buttons_action',
+					'pwal_info_items': pwal_info_items,
+					'nonce': pwal_data['ajax-nonce'],
+					'debug': pwal_data.debug
+				},
+				error: function(jqXHR, textStatus, errorThrown ) {
+					console.log('handle_button: error HTTP Status['+jqXHR.status+'] '+errorThrown);					
+				},
+				success: function(reply_data) {
+					if (reply_data != undefined) {
+						if (pwal_data.debug == "true") {
+							console.log('handle_button: reply_data[%o]', reply_data);
+						}
 					
-					if ((reply_data['errorStatus'] != undefined) && (reply_data['errorStatus'] == false)) {
+						if ((reply_data['errorStatus'] != undefined) && (reply_data['errorStatus'] == false)) {
 						
-						// We want to set the cookie since the server might not register is due to caching. 
-						if ((reply_data['cookie'] != undefined) && (!jQuery.isEmptyObject(reply_data['cookie']))) {
-							wpmudev_pwal.cookie(pwal_data['cookie_key'], JSON.stringify(reply_data['cookie']), { path: pwal_data['COOKIEPATH'], domain: pwal_data['COOKIEDOMAIN']});
+							// We want to set the cookie since the server might not register is due to caching. 
+							if ((reply_data['cookie'] != undefined) && (!jQuery.isEmptyObject(reply_data['cookie']))) {
+								wpmudev_pwal.cookie(pwal_data['cookie_key'], JSON.stringify(reply_data['cookie']), { path: pwal_data['COOKIEPATH'], domain: pwal_data['COOKIEDOMAIN']});
 
-							var pwal_cookie = wpmudev_pwal.cookie(pwal_data['cookie_key']);
-							pwal_cookie = JSON.parse(pwal_cookie);
-							if (pwal_data.debug == "true") {
-								console.log('handle_button: pwal_cookie[%o]', pwal_cookie);
-							}
-
-							if ((reply_data['cookie']['data'] != undefined) && (!jQuery.isEmptyObject(reply_data['cookie']['data']))) {
-								wpmudev_pwal.cookies = reply_data['cookie']['data'];
-							}
-						}
-
-						if ((reply_data['pwal_info_items'] != undefined) && (!jQuery.isEmptyObject(reply_data['pwal_info_items']))) {
-							var deferred_reload = false;
-
-							for (var pwal_id in reply_data['pwal_info_items']) {
-								if (!reply_data['pwal_info_items'].hasOwnProperty(pwal_id)) continue;
-
-								var pwal_info = reply_data['pwal_info_items'][pwal_id];
+								var pwal_cookie = wpmudev_pwal.cookie(pwal_data['cookie_key']);
+								pwal_cookie = JSON.parse(pwal_cookie);
 								if (pwal_data.debug == "true") {
-									console.log('handle_button: pwal_info[%o]', pwal_info);
+									console.log('handle_button: pwal_cookie[%o]', pwal_cookie);
 								}
-								
-								if ((pwal_info['content_reload'] != undefined) && (pwal_info['content_reload'] == 'ajax')) {
-									if ((pwal_info['content_id'] != undefined) && (pwal_info['content_id'] != '') && (pwal_info['content'] != undefined) && (pwal_info['content'] != '')) {
-										//jQuery('#pwal_container_'+reply_data['content_id']).replaceWith(reply_data['content']);
-										jQuery('#pwal_content_wrapper_'+pwal_info['content_id']).replaceWith(pwal_info['content']);
+
+								if ((reply_data['cookie']['data'] != undefined) && (!jQuery.isEmptyObject(reply_data['cookie']['data']))) {
+									wpmudev_pwal.cookies = reply_data['cookie']['data'];
+								}
+							}
+
+							if ((reply_data['pwal_info_items'] != undefined) && (!jQuery.isEmptyObject(reply_data['pwal_info_items']))) {
+								var deferred_reload = false;
+
+								for (var pwal_id in reply_data['pwal_info_items']) {
+									if (!reply_data['pwal_info_items'].hasOwnProperty(pwal_id)) continue;
+
+									var pwal_info = reply_data['pwal_info_items'][pwal_id];
+									if (pwal_data.debug == "true") {
+										console.log('handle_button: pwal_info[%o]', pwal_info);
 									}
-								} else {
-									deferred_reload = true;
-								}		
-							}
+								
+									if ((pwal_info['content_reload'] != undefined) && (pwal_info['content_reload'] == 'ajax')) {
+										if ((pwal_info['content_id'] != undefined) && (pwal_info['content_id'] != '') && (pwal_info['content'] != undefined)) {
+											jQuery('#pwal_content_wrapper_'+pwal_info['content_id']).replaceWith(pwal_info['content']);
+										}
+									} else {
+										deferred_reload = true;
+									}		
+								}
 							
-							if (deferred_reload == true) {
-								window.location.href = window.location.href;
+								if (deferred_reload == true) {
+									window.location.href = window.location.href;
+								}
 							}
-						}
 												
 						
-					} else if ((reply_data['errorStatus'] != undefined) && (reply_data['errorStatus'] == true)) {
-						if (reply_data['errorText'] != undefined) {
-							console.log('Errors: '. reply_data['errorText']);
-						}
+						} else if ((reply_data['errorStatus'] != undefined) && (reply_data['errorStatus'] == true)) {
+							if (reply_data['errorText'] != undefined) {
+								console.log('Errors: '. reply_data['errorText']);
+							}
 						
-					} else {
-						console.log('expected JSON [errorStatus] response from sever');
-					}
+						} else {
+							console.log('expected JSON [errorStatus] response from sever');
+						}
 					
-				} else {
-					console.log('expected JSON response from sever');
+					} else {
+						console.log('expected JSON response from sever');
+					}
+				},
+				complete: function(e, xhr, settings) {
+					//console.log('status=['+e.status+']');
 				}
-			},
-			complete: function(e, xhr, settings) {
-				//console.log('status=['+e.status+']');
-			}
-    	});	
+	    	});	
+		}
 	},
 	google_plusone_init_js: function() {
 		if ((pwal_data.options['use_google'] == undefined) || (pwal_data.options['use_google'] != "true"))
@@ -506,6 +540,7 @@ var wpmudev_pwal = jQuery.extend(wpmudev_pwal || {}, {
 							
 								jQuery(fb_like_span).width('450px');
 								jQuery(fb_like_span).height('179px');
+								jQuery(fb_like_span).css('z-index', '999');
 								//jQuery(fb_like_iframe).css('margin-left', '0');
 							
 								hasFBCommentPopup = true;
@@ -783,12 +818,12 @@ var wpmudev_pwal = jQuery.extend(wpmudev_pwal || {}, {
 							}
 						} 
 						
-						if (Object.keys(pwal_info_items).length > 0) {
+						//if (Object.keys(pwal_info_items).length > 0) {
 							wpmudev_pwal.handle_buttons(pwal_info_items);
-						}
+						//}
 					}
 				);
-			} else if (Object.keys(pwal_info_items).length > 0) {
+			} else /* if (Object.keys(pwal_info_items).length > 0) */ {
 				wpmudev_pwal.handle_buttons(pwal_info_items);
 			}
 		}	

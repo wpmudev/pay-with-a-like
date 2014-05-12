@@ -84,7 +84,7 @@ function pwal_admin_panels_defaults() {
 			<tr valign="top" id="excerpt_length" <?php if ( $pwal->options['method'] != 'automatic' ) echo 'style="display:none"'?>>
 				<th scope="row" ><label for="pwal_excerpt"><?php _e('Excerpt length (words)', 'pwal')?></label></th>
 				<td colspan="2">
-					<p class="description"><?php _e('Number of words of the post content that will be displayed publicly. Only effective if Automatic excerpt is selected.', 'pwal') ?></p>
+					<p class="description"><?php _e('Number of words of the post content that will be displayed publicly. Only effective if Automatic excerpt is selected. And if the post content length is longer than the set number of words.', 'pwal') ?></p>
 					<input type="text" class="regular-text" id="pwal_excerpt" name="pwal[excerpt]" value="<?php echo $pwal->options["excerpt"] ?>" />
 				</td>
 			</tr>
@@ -267,6 +267,47 @@ function pwal_admin_panels_visibility() {
 			</table>
 		</div>
 	</div>
+	
+	<div class="postbox">
+		<h3 class="hndle" style="cursor:auto;"><span><?php _e('Sitewide and Random Likes', 'pwal') ?></span></h3>
+   		<div class="inside">		
+			<table class="form-table">
+			<tr valign="top">
+				<th scope="row" ><label for="pwal_sitewide"><?php _e('Sitewide Like','pwal')?></label></th>
+				<td colspan="2">
+					<p class="description"><?php _e('If selected yes, when visitor likes a single content, all protected content on the website will be revealed to him/her.','pwal')?></p>
+					<select id="pwal_sitewide" name="pwal[sitewide]">
+						<option value="true" <?php selected( $pwal->options['sitewide'], 'true' ) ?> ><?php _e('Yes','pwal')?></option>
+						<option value="" <?php selected( $pwal->options['sitewide'], '' ) ?>><?php _e('No','pwal')?></option>
+					</select>
+			
+				</td>
+			</tr>
+
+			<tr valign="top">
+				<th scope="row" ><label for="pwal_random"><?php _e('Like Random Page','pwal')?></label></th>
+				<td colspan="2">
+					<p class="description"><?php _e('If selected yes, a random published page or post on your website will be selected to be liked. This disables "URL to be liked" setting.','pwal')?></p>
+					<select name="pwal[random]" id="pwal_random">
+						<option value="true" <?php selected( $pwal->options['random'], 'true' ) ?> ><?php _e('Yes','pwal')?></option>
+						<option value="" <?php selected( $pwal->options['random'], '' ) ?>><?php _e('No','pwal')?></option>
+					</select>
+				</td>
+			</tr>
+
+			<tr valign="top" id="url_to_like_section" <?php if ( $pwal->options['random'] == 'true' ) echo 'style="display:none"'?>>
+				<th scope="row" ><label for="pwal_url_to_like"><?php _e('URL to be liked', 'pwal') ?></label></th>
+				<td colspan="2">
+					<p class="description"><?php
+					/* translators: Here, %s is the home page url. */
+					printf(__('You can enter a single URL to be liked, e.g. your home page, %s. This can be any URL external to your site like your Facebook page. If left empty, the URL for the post will be used. You can also override the URL to be liked on each post.', 'pwal'), home_url() ); 
+					?></p>
+					<input type="text" class="regular-text" id="pwal_url_to_like" name="pwal[url_to_like]" value="<?php echo $pwal->options["url_to_like"] ?>" />
+				</td>
+			</tr>
+			</table>
+		</div>
+	</div>
 	<?php
 }
 
@@ -386,46 +427,7 @@ function pwal_admin_panels_social() {
 		</div>
 	</div>
 <?php */ ?>
-	<div class="postbox">
-		<h3 class="hndle" style="cursor:auto;"><span><?php _e('Sitewide and Random Likes', 'pwal') ?></span></h3>
-   		<div class="inside">		
-			<table class="form-table">
-			<tr valign="top">
-				<th scope="row" ><label for="pwal_sitewide"><?php _e('Sitewide Like','pwal')?></label></th>
-				<td colspan="2">
-					<p class="description"><?php _e('If selected yes, when visitor likes a single content, all protected content on the website will be revealed to him/her.','pwal')?></p>
-					<select id="pwal_sitewide" name="pwal[sitewide]">
-						<option value="true" <?php selected( $pwal->options['sitewide'], 'true' ) ?> ><?php _e('Yes','pwal')?></option>
-						<option value="" <?php selected( $pwal->options['sitewide'], '' ) ?>><?php _e('No','pwal')?></option>
-					</select>
-			
-				</td>
-			</tr>
-
-			<tr valign="top">
-				<th scope="row" ><label for="pwal_random"><?php _e('Like Random Page','pwal')?></label></th>
-				<td colspan="2">
-					<p class="description"><?php _e('If selected yes, a random published page or post on your website will be selected to be liked. This disables "URL to be liked" setting.','pwal')?></p>
-					<select name="pwal[random]" id="pwal_random">
-						<option value="true" <?php selected( $pwal->options['random'], 'true' ) ?> ><?php _e('Yes','pwal')?></option>
-						<option value="" <?php selected( $pwal->options['random'], '' ) ?>><?php _e('No','pwal')?></option>
-					</select>
-				</td>
-			</tr>
-
-			<tr valign="top" id="url_to_like_section" <?php if ( $pwal->options['random'] == 'true' ) echo 'style="display:none"'?>>
-				<th scope="row" ><label for="pwal_url_to_like"><?php _e('URL to be liked', 'pwal') ?></label></th>
-				<td colspan="2">
-					<p class="description"><?php
-					/* translators: Here, %s is the home page url. */
-					printf(__('You can enter a single URL to be liked, e.g. your home page, %s. NOT your page on the Social Networking Website, e.g. Facebook. If left empty, the page that button is clicked will be liked.', 'pwal'), home_url() ); 
-					?></p>
-					<input type="text" class="regular-text" id="pwal_url_to_like" name="pwal[url_to_like]" value="<?php echo $pwal->options["url_to_like"] ?>" />
-				</td>
-			</tr>
-			</table>
-		</div>
-	</div>	
+	
 	<?php
 }
 
@@ -490,12 +492,14 @@ function pwal_admin_panels_facebook() {
 			<tr valign="top">
 				<th scope="row" ><label for="pwal_facebook_include_share"><?php _e('Include Share button', 'pwal') ?></label></th>
 				<td colspan="2">
+					<p class="description"><?php _e('User still needs to use Like button to unlock hidden content.', 'pwal') ?></p>
 					<select id="pwal_facebook_include_share" name="pwal[facebook_include_share]">
 					<option value="" <?php selected( $pwal->options['facebook_include_share'], '' ); ?>><?php _e('No', 'pwal')?></option>
 					<option value="yes" <?php selected( $pwal->options['facebook_include_share'], 'yes' ); ?>><?php _e('Yes', 'pwal')?></option>
 					</select>
 				</td>
 			</tr>
+<?php /* ?>			
 			<tr valign="top">
 				<th scope="row" ><label for="pwal_facebook_include_faces"><?php _e('Include Faces', 'pwal') ?></label></th>
 				<td colspan="2">
@@ -505,7 +509,7 @@ function pwal_admin_panels_facebook() {
 					</select>
 				</td>
 			</tr>
-					
+<?php */ ?>					
 			<tr valign="top">
 				<th scope="row" ><label for="pwal_show_facebook_comment_popup"><?php _e('Facebook Comment popup', 'pwal') ?></label></th>
 				<td colspan="2">
