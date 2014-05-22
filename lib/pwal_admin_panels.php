@@ -587,8 +587,14 @@ function pwal_admin_panels_facebook() {
 			</tr>
 			<tr valign="top" id="pwal_facebook_auth_polling_interval_section" <?php if ($pwal->options['facebook_auth_polling'] == 'no') { echo ' style="display:none;" '; } ?>>
 				<th scope="row"><label for="pwal_facebook_auth_polling_interval"><?php _e('Polling Frequency (seconds)','pwal')?></label></th>
-				<td><input id="pwal_facebook_auth_polling_interval" type="text" name="pwal[facebook_auth_polling_interval]" 
-					value="<?php echo $pwal->options["facebook_auth_polling_interval"] ?>" />
+				<td>
+					<?php
+						$facebook_auth_polling_interval = intval($pwal->options["facebook_auth_polling_interval"]);
+						if (empty($facebook_auth_polling_interval))
+							$facebook_auth_polling_interval = 1;
+					?>
+					<input id="pwal_facebook_auth_polling_interval" type="text" name="pwal[facebook_auth_polling_interval]" 
+					value="<?php echo $facebook_auth_polling_interval ?>" />
 				</td>
 			</tr>
 			

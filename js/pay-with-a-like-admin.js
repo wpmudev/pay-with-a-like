@@ -133,7 +133,8 @@ function pwal_metabox_check() {
 		jQuery('#pwal_metabox p#section_pwal_excerpt').hide();
 		jQuery('#pwal_metabox p#section_pwal_description').hide();
 		jQuery('#pwal_metabox p#section_pwal_container_width').hide();
-
+		jQuery('#pwal_metabox p#section_pwal_url_to_like').hide();
+		
 		jQuery('#content_paywithalike').hide();
 		
 	} else if ((pwal_enabled == 'enable') || (pwal_enabled == 'global_enable')) {
@@ -143,6 +144,7 @@ function pwal_metabox_check() {
 		jQuery('#pwal_metabox p#section_pwal_excerpt').show();
 		jQuery('#pwal_metabox p#section_pwal_description').show();
 		jQuery('#pwal_metabox p#section_pwal_container_width').show();
+		jQuery('#pwal_metabox p#section_pwal_url_to_like').show();
 
 
 		var pwal_method = jQuery('#pwal_metabox select#pwal_method').val();
