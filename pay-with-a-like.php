@@ -3,7 +3,7 @@
 Plugin Name: Pay With a Like
 Description: Allows protecting posts/pages until visitor likes the page or parts of the page with Facebook, Linkedin, Twitter or Google +1.
 Plugin URI: http://premium.wpmudev.org/project/pay-with-a-like
-Version: 2.0.1.1
+Version: 2.0.1.2
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 TextDomain: pwal
@@ -35,7 +35,7 @@ if ( !class_exists( 'PayWithaLike' ) ) {
 
 class PayWithaLike {
 
-	var $version					=	"2.0.1.1";
+	var $version					=	"2.0.1.2";
 	var $pwal_js_data 				= 	array();
 	var $_pagehooks 				= 	array();
 	var $_options_defaults 			= 	array();
@@ -119,7 +119,7 @@ class PayWithaLike {
 		add_action( 'wp_ajax_pwalTinymceOptions', array(&$this, 'tinymce_options') );
 		add_action( 'admin_init', array(&$this, 'load_tinymce') );
 	
-		add_action( 'wp_ajax__aff_getstats', array(&$this,'ajax__aff_getstats') );
+		add_action( 'wp_ajax__pwal_getstats', array(&$this,'ajax__pwal_getstats') );
 				
 		// By default assume that pages are cachable (Cache plugins are allowed)
 		$this->buttons_added = false;
@@ -2323,7 +2323,7 @@ class PayWithaLike {
 		echo '<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="' . plugins_url('/js/excanvas.min.js', __FILE__) . '"></script><![endif]-->';
 	}
 
-	function ajax__aff_getstats() {
+	function ajax__pwal_getstats() {
 
 		if (isset($_GET['number'])) {
 			$number = intval($_GET['number']);

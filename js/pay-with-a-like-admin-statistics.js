@@ -44,7 +44,7 @@ function affDoPlot() {
 			console.log('blog_id['+blog_id+']');
 		}
 		
-		jQuery.getJSON(ajaxurl, { action: '_aff_getstats', user_id: user_id, blog_id: blog_id, post_id: post_id, number: 12 },
+		jQuery.getJSON(ajaxurl, { action: '_pwal_getstats', user_id: user_id, blog_id: blog_id, post_id: post_id, number: 12 },
 		        function(data){
 
 					if(data.chart) { chart = data.chart; } else { chart = []; }

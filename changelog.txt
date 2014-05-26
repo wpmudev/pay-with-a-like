@@ -1,3 +1,6 @@
+V2.0.1.2: 2014-05-22
+- Correct conflict between Pay With a Like and Affiliate graphs. Both use the same plot JavaScript. 
+
 V2.0.1.1: 2014-05-22
 - Reworked and combined logic to test if buttons need to be displayed. Prior versions parts where within different logic. 
 - Added many more debug output message. Mainly helpful for support team when member reporting issues.
