@@ -434,11 +434,11 @@ var wpmudev_pwal = jQuery.extend(wpmudev_pwal || {}, {
 		
 		if (window.FB != undefined) {
 			if (pwal_data.debug == "true")
-				console.log('setup_facebook_js: FB already defined');
+				console.log('setup_facebook_js: FB already defined in window');
 			wpmudev_pwal.facebook_after_load();
 		} else {
 			if (pwal_data.debug == "true")
-				console.log('setup_facebook_js: FB no defined');
+				console.log('setup_facebook_js: FB no defined in window');
 			window.fbAsyncInit = function() {
 				// init the FB JS SDK
 

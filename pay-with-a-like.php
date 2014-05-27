@@ -3,7 +3,7 @@
 Plugin Name: Pay With a Like
 Description: Allows protecting posts/pages until visitor likes the page or parts of the page with Facebook, Linkedin, Twitter or Google +1.
 Plugin URI: http://premium.wpmudev.org/project/pay-with-a-like
-Version: 2.0.1.2
+Version: 2.0.1.3
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 TextDomain: pwal
@@ -265,6 +265,7 @@ class PayWithaLike {
 			'authorized'					=> 	'',
 			'level'							=> 	'editor',
 			'bot'							=> 	'',
+			'usermeta'						=>	'true',
 			'cookie'						=> 	24,
 			'social_buttons' 				=>	 array(
 													'facebook'	=>	__('Facebook', 	'pwal'),
@@ -734,6 +735,28 @@ class PayWithaLike {
 			if ($this->pwal_js_data['debug'] == 'true')
 				echo "PWAL_DEBUG: ". __FUNCTION__ .": current user logged into WP: true<br />";
 
+			if ($this->options["usermeta"] == 'true') {
+				if ($this->pwal_js_data['debug'] == 'true')
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": option(usermeta): true<br />";
+
+				$usermeta_likes = get_user_meta($current_user->ID, 'pwal_likes', true);
+				if (!empty($usermeta_likes)) {
+					$usermeta_likes = maybe_unserialize($usermeta_likes);
+					if (isset($usermeta_likes[$atts['content_id']])) {
+						if ($this->pwal_js_data['debug'] == 'true')
+							echo "PWAL_DEBUG: ". __FUNCTION__ .": previous usermeta like found<br />";
+						return false;
+					}
+				}
+				if ($this->pwal_js_data['debug'] == 'true') {
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": previous usermeta like not found<br />";
+				}
+				
+			} else {
+				if ($this->pwal_js_data['debug'] == 'true') {
+					echo "PWAL_DEBUG: ". __FUNCTION__ .": option(usermeta): false<br />";
+				}
+			}
 			// Show the admin full content, if selected so
 			//echo "admin[". $this->options["admin"] ."]<br />";
 			if ( $this->options["admin"] == 'true') { 
@@ -1744,10 +1767,20 @@ class PayWithaLike {
 		
 		// Clear empty entries, just in case
 		$this->cookie_likes['data'] = array_filter( $this->cookie_likes['data'] );
-		//$reply_data['likes'] = $this->cookie_likes;
 		
-		//echo "cookie_likes<pre>"; print_r($this->cookie_likes); echo "</pre>";
-		//return $likes;
+		// Secondary check if the user is WP authenticated. Then stores the like(s) as part of the usermeta
+		if ($this->options["usermeta"] == 'true') {
+			if (is_user_logged_in()) {
+				global $current_user;
+			
+				$usermeta_likes = get_user_meta($current_user->ID, 'pwal_likes', true);
+				if (!$usermeta_likes) $usermeta_likes = array();
+			
+				$usermeta_likes[$new_like['content_id']] = $new_like;
+			
+				update_user_meta($current_user->ID, 'pwal_likes', $usermeta_likes);
+			}
+		}
 	}
 
 	function load_cookie_likes() {
@@ -2870,35 +2903,38 @@ class PayWithaLike {
 
 					
 					if (isset($_POST['pwal']['home']))
-						$this->options['home']								= $_POST['pwal']['home'];
+						$this->options['home']								= esc_attr($_POST['pwal']['home']);
 
 
 					if (isset($_POST['pwal']['multi']))
-						$this->options['multi']								= $_POST['pwal']['multi'];
+						$this->options['multi']								= esc_attr($_POST['pwal']['multi']);
 
 
 					if (isset($_POST['pwal']['admin']))
-						$this->options['admin']								= $_POST['pwal']['admin'];
+						$this->options['admin']								= esc_attr($_POST['pwal']['admin']);
 
 
 					if (isset($_POST['pwal']['authorized']))
-						$this->options['authorized']						= $_POST['pwal']['authorized'];
+						$this->options['authorized']						= esc_attr($_POST['pwal']['authorized']);
 
 
 					if (isset($_POST['pwal']['level']))
-						$this->options['level']								= $_POST['pwal']['level'];
+						$this->options['level']								= esc_attr($_POST['pwal']['level']);
 
 
 					if (isset($_POST['pwal']['bot']))
-						$this->options['bot']								= $_POST['pwal']['bot'];
+						$this->options['bot']								= esc_attr($_POST['pwal']['bot']);
 
 
 					if (isset($_POST['pwal']['cookie']))
 						$this->options['cookie']							= intval($_POST['pwal']['cookie']);
 
+					if (isset($_POST['pwal']['usermeta']))
+						$this->options['usermeta']							= esc_attr($_POST['pwal']['usermeta']);
+
 					
 					if (isset($_POST['pwal']['sitewide']))
-						$this->options['sitewide']							= $_POST['pwal']['sitewide'];
+						$this->options['sitewide']							= esc_attr($_POST['pwal']['sitewide']);
 					else
 						$this->options['sitewide']							= '';
 

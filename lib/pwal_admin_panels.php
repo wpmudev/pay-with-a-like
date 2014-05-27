@@ -264,6 +264,17 @@ function pwal_admin_panels_visibility() {
 					<input type="text" style="width:50px" id="pwal_cookie" name="pwal[cookie]" value="<?php echo $pwal->options["cookie"] ?>" />
 				</td>
 			</tr>
+
+			<tr valign="top">
+				<th scope="row" ><label for="pwal_usermeta"><?php _e('Use usermeta to store WordPress user likes', 'pwal')?></label></th>
+				<td colspan="2">
+					<p class="description"><?php _e('WordPress authenticated users can also store their like(s) as part of the user meta information. This does not expire like a cookie and will be there no if the browser cookies are cleared or if the user uses a different browser.', 'pwal') ?></p>
+					<select id="pwal_usermeta" name="pwal[usermeta]">
+						<option value="true" <?php selected( $pwal->options['usermeta'], 'true' ) ?> ><?php _e('Yes','pwal')?></option>
+						<option value="" <?php selected( $pwal->options['usermeta'], '' ) ?>><?php _e('No','pwal')?></option>
+					</select>
+				</td>
+			</tr>
 			</table>
 		</div>
 	</div>
