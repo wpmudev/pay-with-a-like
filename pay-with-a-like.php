@@ -1396,7 +1396,7 @@ class PayWithaLike {
 					}
 				}
 			
-				$result = $wpdb->get_row("SELECT * FROM $wpdb->posts WHERE (post_type IN ('. $post_types_sql .')) AND post_status='publish' ORDER BY RAND()");
+				$result = $wpdb->get_row("SELECT * FROM $wpdb->posts WHERE (post_type IN (". $post_types_sql .")) AND post_status='publish' ORDER BY RAND()");
 				if ( $result != null ) {
 					$url_to_like = get_permalink( $result->ID );
 				} else {
