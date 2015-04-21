@@ -1019,9 +1019,9 @@ function pwal_admin_panels_statistic_actions() {
 				<tr valign="top">
 					<td scope="row" >
 						<?php
-						$action_url = add_query_arg('action', 'pwal_delete_stats');
+						$action_url = esc_url( add_query_arg('action', 'pwal_delete_stats') );
 						if (isset($_GET['post'])) {
-							$action_url = add_query_arg('post', intval($_GET['post']), $action_url);
+							$action_url = esc_url( add_query_arg('post', intval($_GET['post']), $action_url) );
 						}
 						
 						?>
@@ -1032,7 +1032,7 @@ function pwal_admin_panels_statistic_actions() {
 						<?php
 							$action_url = admin_url('admin-ajax.php?action=pwal_export_stats');
 							if (isset($_GET['post'])) {
-								$action_url = add_query_arg('post', intval($_GET['post']), $action_url);
+								$action_url = esc_url( add_query_arg('post', intval($_GET['post']), $action_url) );
 							}
 							
 						?>
