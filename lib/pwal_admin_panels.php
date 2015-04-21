@@ -673,7 +673,7 @@ function pwal_admin_panels_facebook() {
 											?><div class="pwal-fan-page-name"><?php echo $fan_page_info['name'] ?></div><?php
 										}
 										if (isset($fan_page_info['page_url'])) {
-											?><div class="pwal-fan-page-url"><span class="pwal-label"><?php _e('URL:', 'pwal') ?></label> <a target="_blank" href="<?php echo $fan_page_info['page_url'] ?>"><?php echo $fan_page_info['page_url'] ?></a></div>
+											?><div class="pwal-fan-page-url"><span class="pwal-label"><?php _e('URL:', 'pwal') ?></span> <a target="_blank" href="<?php echo $fan_page_info['page_url'] ?>"><?php echo $fan_page_info['page_url'] ?></a></div>
 											<?php
 										}
 										if (isset($fan_page_info['page_id'])) {
