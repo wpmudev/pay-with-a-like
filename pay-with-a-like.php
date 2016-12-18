@@ -49,6 +49,10 @@ class PayWithaLike {
 	
 	var $_registered_scripts		= array();	
 	var $_registered_styles			= array();		
+
+	var $_fb_api_ep               = 'https://graph.facebook.com/' ; 
+	var $_fb_api_ver              = 'v2.8' ; 
+	var $_fb_api_acctoken; 
 	
 	var $sitewide_id;
 	
