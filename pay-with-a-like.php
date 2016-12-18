@@ -124,62 +124,6 @@ class PayWithaLike {
 		$this->buttons_added = false;
 		$this->footer_script = "";
 		
-		
-		// Load the Facebook PHP SDK. So we can check if the user has previously liked the content
-/*		
-		include_once( dirname(__FILE__) .'/lib/facebook-php-sdk/facebook.php');
-		
-		$facebook = new PWALFacebook(array(
-			'appId'  => '489708481139071',
-			'secret' => '094e908608b9085916a9f474a03ef730',
-			'cookie' => true, 
-		));
-		
-		$user = $facebook->getUser();
-		if ($user) {
-			try {
-				//echo "user<pre>"; print_r($user); echo "</pre>";
-
-				// Proceed knowing you have a logged in user who's authenticated.
-				//$user_profile = $facebook->api('/me');
-				//if ($user_profile) {
-				//	echo "user_profile<pre>"; print_r($user_profile); echo "</pre>";
-
-					//Create Query
-					//$params = array(
-					//	'method'	=>	'fql.query',
-					//	'query'		=> 'SELECT url, user_id FROM url_like WHERE user_id = me()'					
-					//);
-
-					//$params = array(
-					//	'method'	=>	'fql.query',
-					//	'query'		=> 'SELECT created_time, page_id, profile_section, type, uid FROM page_fan WHERE uid = me()'					
-					//);
-
-//					$params = array(
-//						'method'	=>	'fql.query',
-//						'query'		=> 'SELECT created_time, page_id, profile_section, type, uid FROM page_fan WHERE uid = me() AND page_id='. 110774245616525					
-//					);
-
-					$params = array(
-						'method'	=>	'fql.query',
-						'query'		=> "SELECT name,page_id, page_url,pic_square FROM page WHERE username = 'museedulouvre'"
-					);
-
-					echo "params<pre>"; print_r($params); echo "</pre>";
-				
-					//Run Query
-					$result = $facebook->api($params);
-					echo "result<pre>"; print_r($result); echo "</pre>";
-					//}
-				
-		  	} catch (PWALFacebookApiException $e) {
-		    	error_log($e);
-		    	$user = null;
-		  	}
-		}
-		die();
-*/		
 	}
 	
 	function PayWithaLike() {
