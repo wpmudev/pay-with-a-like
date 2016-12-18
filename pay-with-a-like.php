@@ -307,7 +307,6 @@ class PayWithaLike {
 		
 		if (is_admin()) return;
 		
-		//echo "in ". __FILE__ .": ". __FUNCTION__ .": ". __LINE__ ."<br />";
 		wp_enqueue_script('jquery');
 		wp_enqueue_script( 'pay-with-a-like-js', plugins_url('/js/pay-with-a-like.js', __FILE__), array('jquery'), $this->version, true);
 		$this->_registered_scripts['pay-with-a-like-js'] = 'pay-with-a-like-js';
@@ -340,7 +339,6 @@ class PayWithaLike {
 		if ( $this->options["use_linkedin"] && $this->options["load_linkedin"] ) {
 			if (empty($this->options["linkedin_button_lang"])) {
 				wp_enqueue_script( 'linkedin', '//platform.linkedin.com/in.js', array( 'jquery' ), '', true );
-				//$this->pwal_js_data['linkedin-js'] = '//platform.linkedin.com/in.js';
 				
 				$this->_registered_scripts['linkedin'] = 'linkedin';
 			}
@@ -353,7 +351,6 @@ class PayWithaLike {
 		}
 		
 		if ( $this->options["use_google"] && $this->options["load_google"] ) {
-			//wp_enqueue_script( 'google-plusone', '//apis.google.com/js/plusone.js', array( 'jquery' ), '1.0', true );
 			$this->pwal_js_data['google-plusone-js'] = '//apis.google.com/js/plusone.js';
 			$google_button_lang = $this->options["google_button_lang"];
 			if (!empty($google_button_lang)) {
@@ -369,10 +366,8 @@ class PayWithaLike {
 		$uploads = wp_upload_dir();
 		if ( !$uploads['error'] && file_exists( $uploads['basedir'] . "/". $this->plugin_name .".css" ) ) {
 			wp_enqueue_style( $this->plugin_name, $uploads['baseurl']. "/". $this->plugin_name .".css", array(), $this->version );
-			//$this->_registered_styles[$this->plugin_name] = $this->plugin_name;
 		} else if ( file_exists( $this->plugin_dir. "/css/front.css" ) ) {
 			wp_enqueue_style( $this->plugin_name, $this->plugin_url. "/css/front.css", array(), $this->version );
-			//$this->_registered_styles[$this->plugin_name] = $this->plugin_name;
 		}
     }
 
@@ -400,9 +395,7 @@ class PayWithaLike {
 	}
 
 	function pwal_shortcode($atts, $content = null) {
-		//echo "DEBUG: in ". __FUNCTION__ .": ". __LINE__ ."<br />";
-		//echo "atts (before)<pre>"; print_r($atts); echo "</pre>";
-		//echo "content[". $content ."]<br />";
+
 				
 		$default_atts = array(
 			'id'				=>	'',
