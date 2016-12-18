@@ -274,10 +274,6 @@ class PayWithaLike {
 		}
 	}
 	
-//	function admin_enqueue_scripts() {
-		//wp_enqueue_style( 'pay-with-a-like-admin-css', plugins_url('/css/pay-with-a-like-admin.css', __FILE__), array(), $this->version);
-		//wp_enqueue_script( 'pay-with-a-like-admin-js', plugins_url('/js/pay-with-a-like-admin.js', __FILE__), array(), $this->version);
-//	}
 
 
 	/**
