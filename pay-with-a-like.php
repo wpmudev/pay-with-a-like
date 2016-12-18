@@ -188,8 +188,6 @@ class PayWithaLike {
 		
 		$this->load_cookie_likes();
 		
-		//echo "options<pre>"; print_r($this->options); echo "</pre>";
-		//die();
 	}
 	
 	function set_option_defaults() {
@@ -571,10 +569,6 @@ class PayWithaLike {
 		//	echo "PWAL_DEBUG: ". __FUNCTION__ .": not found like cookie for post_id[". $atts['post_id'] ."]<br />";
 		//}
 		
-		//echo "DEBUG: in ". __FUNCTION__ .": ". __LINE__ ."<br />";
-		//echo "atts<pre>"; print_r($atts); echo "</pre>";
-		//echo "content[". $content ."]<br />";
-		
 		delete_transient('pwal_'.$atts['content_id']);
 		set_transient( 'pwal_'.$atts['content_id'], $content, 1 * HOUR_IN_SECONDS );
 		$pwal_content = '<div id="pwal_content_wrapper_'. $atts['content_id'] .'" class="pwal_content_wrapper">'. $this->render_buttons( $atts ) .'</div>';
@@ -918,9 +912,6 @@ class PayWithaLike {
 			
 		global $post;
 		
-		//if ($this->pwal_js_data['debug'] == 'true') {
-		//	echo "PWAL_DEBUG: ". __FUNCTION__ .": -------------------- START --------------------<br />";
-		//}
 		
 		// Find method
 		$method = get_post_meta( $post->ID, 'pwal_method', true );
@@ -2696,13 +2687,9 @@ class PayWithaLike {
 	                                    }
 
 								 	}
-									//echo "facebook_fan_pages<pre>"; print_r($this->options['facebook_fan_pages']); echo "</pre>";
-									//echo "end<br />";
-									//die();
+	
 								}
-								//echo "_POST<pre>"; print_r($_POST); echo "</pre>";
-								//echo "options<pre>"; print_r($this->options); echo "</pre>";
-								//die();
+
 								break;
 				
 							case 'linkedin':
