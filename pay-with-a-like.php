@@ -2661,6 +2661,8 @@ class PayWithaLike {
 										'cookie' => true, 
 									));
 
+									$this->_fb_api_acctoken = $this->options['facebook_api_key'] .'|'. $this->options['facebook_api_secret'] ;
+
 									foreach($_POST['pwal']['facebook_fan_page_urls_new'] as $url) {
 										$url = esc_url(trim($url));
 										//echo "url[". $url ."]<br />";
@@ -2670,8 +2672,29 @@ class PayWithaLike {
 										if (!empty($url_path)) {
 											$url_path = basename($url_path);
 								
+                                       		$fb_requrl  = $this->_fb_api_ep . $this->_fb_api_ver .'/'. $url_path;
+											$fb_requrl .= '?access_token=' . $this->_fb_api_acctoken ; 
+                                       		$fb_requrl .= '&fields=picture,name,about,link';
 
-										 }
+
+                                       		$fb_resp = wp_remote_get( $fb_requrl ) ;
+                                       		$fb_resp_array = json_decode( $fb_resp['body'] , true );
+
+										}
+
+										if ((!empty($fb_resp_array)) && (!is_wp_error($fb_resp))) {
+	                                        foreach( $fb_resp_array as $result => $value) {
+		                                        if( $result == 'id' ) : 
+
+		                                        	$fb_resp_array['page_id']     = $value ; 
+		                                            $fb_resp_array['page_url']    = $fb_resp_array['link'] ; 
+		                                            $fb_resp_array['pic_square']  = $fb_resp_array['picture']['data']['url'] ; 
+		                                        	$this->options['facebook_fan_pages'][$value] = $fb_resp_array;
+
+		                                        endif ; 
+		                                    }
+	                                    }
+
 								 	}
 									//echo "facebook_fan_pages<pre>"; print_r($this->options['facebook_fan_pages']); echo "</pre>";
 									//echo "end<br />";
