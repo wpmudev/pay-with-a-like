@@ -2666,42 +2666,7 @@ class PayWithaLike {
 										if (!empty($url_path)) {
 											$url_path = basename($url_path);
 								
-											//echo "url_path[". $url_path ."]<br />";
-											$url_path_int = intval($url_path);
-											//echo "url_path_int[". $url_path_int ."]<br />";
-											//echo "empty[". empty($url_path_int )."]<br />";
-											if (empty($url_path_int)) {
-												$query_str = "SELECT name,page_id, page_url,pic_square FROM page WHERE username = '". $url_path ."'";
-											}
-											else {
-												$query_str = "SELECT name,page_id, page_url,pic_square FROM page WHERE page_id = '". $url_path ."'";
 
-											} 
-								
-											try {
-									
-												//echo "query_str[". $query_str ."]<br />";
-												$params = array(
-													'method'	=>	'fql.query',
-													'query'		=> 	$query_str
-												);
-
-												//echo "params<pre>"; print_r($params); echo "</pre>";
-			
-												//Run Query
-												$results = $facebook->api($params);
-												//echo "results<pre>"; print_r($results); echo "</pre>";
-												if ((!empty($results)) && (is_array($results))) {
-													foreach($results as $result) {
-														if ((!empty($result)) && (isset($result['page_id'])) && (!empty($result['page_id']))) {
-															$this->options['facebook_fan_pages'][$result['page_id']] = $result;
-														}
-													}
-												} 
-			
-											 } catch (PWALFacebookApiException $e) {
-												 //echo "Exception<pre>"; print_r($e); echo "</pre>";
-											 }
 										 }
 								 	}
 									//echo "facebook_fan_pages<pre>"; print_r($this->options['facebook_fan_pages']); echo "</pre>";
