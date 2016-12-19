@@ -2516,7 +2516,7 @@ class PayWithaLike {
 
                                        		$fb_resp = wp_remote_get( $fb_requrl ) ;
 
-                                       		if( wp_remote_retrieve_response_code($fb_resp) != 200 &&  (!is_wp_error($fb_resp)) )
+                                       		if( wp_remote_retrieve_response_code($fb_resp) == 200 &&  (!is_wp_error($fb_resp)) )
                                        			$fb_resp_array = json_decode( $fb_resp['body'] , true );
 										}
 
