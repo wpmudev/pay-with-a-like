@@ -2497,7 +2497,9 @@ class PayWithaLike {
 									));
 
 									$this->_fb_api_acctoken = $this->options['facebook_api_key'] .'|'. $this->options['facebook_api_secret'] ;
-
+									
+									$fb_resp_array = array() ; 
+									
 									foreach($_POST['pwal']['facebook_fan_page_urls_new'] as $url) {
 										$url = esc_url(trim($url));
 										//echo "url[". $url ."]<br />";
@@ -2513,11 +2515,12 @@ class PayWithaLike {
 
 
                                        		$fb_resp = wp_remote_get( $fb_requrl ) ;
-                                       		$fb_resp_array = json_decode( $fb_resp['body'] , true );
 
+                                       		if( wp_remote_retrieve_response_code($fb_resp) != 200 &&  (!is_wp_error($fb_resp)) )
+                                       			$fb_resp_array = json_decode( $fb_resp['body'] , true );
 										}
 
-										if ((!empty($fb_resp_array)) && (!is_wp_error($fb_resp))) {
+										if ((!empty($fb_resp_array))) {
 	                                        foreach( $fb_resp_array as $result => $value) {
 		                                        if( $result == 'id' ) : 
 
