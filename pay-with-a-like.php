@@ -388,7 +388,7 @@ class PayWithaLike {
 			
 			//wp_enqueue_script('facebook-all', 'http://connect.facebook.net/' . $locale . '/all.js', array( 'jquery' ) );
 			// We don't enqueue the JS just yet. We pass the JS url to out script where it will be loaded dynamcially. If needed.
-			$this->pwal_js_data['facebook-all-js'] = '//connect.facebook.net/' . $locale . '/all.js&status=0';
+			$this->pwal_js_data['facebook-all-js'] = '//connect.facebook.net/' . $locale . '/all.js';
 				
 		}
 		
