@@ -49,6 +49,10 @@ class PayWithaLike {
 	
 	var $_registered_scripts		= array();	
 	var $_registered_styles			= array();		
+
+	var $_fb_api_ep               = 'https://graph.facebook.com/' ; 
+	var $_fb_api_ver              = 'v2.8' ; 
+	var $_fb_api_acctoken; 
 	
 	var $sitewide_id;
 	
@@ -124,62 +128,6 @@ class PayWithaLike {
 		$this->buttons_added = false;
 		$this->footer_script = "";
 		
-		
-		// Load the Facebook PHP SDK. So we can check if the user has previously liked the content
-/*		
-		include_once( dirname(__FILE__) .'/lib/facebook-php-sdk/facebook.php');
-		
-		$facebook = new PWALFacebook(array(
-			'appId'  => '489708481139071',
-			'secret' => '094e908608b9085916a9f474a03ef730',
-			'cookie' => true, 
-		));
-		
-		$user = $facebook->getUser();
-		if ($user) {
-			try {
-				//echo "user<pre>"; print_r($user); echo "</pre>";
-
-				// Proceed knowing you have a logged in user who's authenticated.
-				//$user_profile = $facebook->api('/me');
-				//if ($user_profile) {
-				//	echo "user_profile<pre>"; print_r($user_profile); echo "</pre>";
-
-					//Create Query
-					//$params = array(
-					//	'method'	=>	'fql.query',
-					//	'query'		=> 'SELECT url, user_id FROM url_like WHERE user_id = me()'					
-					//);
-
-					//$params = array(
-					//	'method'	=>	'fql.query',
-					//	'query'		=> 'SELECT created_time, page_id, profile_section, type, uid FROM page_fan WHERE uid = me()'					
-					//);
-
-//					$params = array(
-//						'method'	=>	'fql.query',
-//						'query'		=> 'SELECT created_time, page_id, profile_section, type, uid FROM page_fan WHERE uid = me() AND page_id='. 110774245616525					
-//					);
-
-					$params = array(
-						'method'	=>	'fql.query',
-						'query'		=> "SELECT name,page_id, page_url,pic_square FROM page WHERE username = 'museedulouvre'"
-					);
-
-					echo "params<pre>"; print_r($params); echo "</pre>";
-				
-					//Run Query
-					$result = $facebook->api($params);
-					echo "result<pre>"; print_r($result); echo "</pre>";
-					//}
-				
-		  	} catch (PWALFacebookApiException $e) {
-		    	error_log($e);
-		    	$user = null;
-		  	}
-		}
-		die();
-*/		
 	}
 	
 	function PayWithaLike() {
@@ -240,8 +188,6 @@ class PayWithaLike {
 		
 		$this->load_cookie_likes();
 		
-		//echo "options<pre>"; print_r($this->options); echo "</pre>";
-		//die();
 	}
 	
 	function set_option_defaults() {
@@ -328,10 +274,6 @@ class PayWithaLike {
 		}
 	}
 	
-//	function admin_enqueue_scripts() {
-		//wp_enqueue_style( 'pay-with-a-like-admin-css', plugins_url('/css/pay-with-a-like-admin.css', __FILE__), array(), $this->version);
-		//wp_enqueue_script( 'pay-with-a-like-admin-js', plugins_url('/js/pay-with-a-like-admin.js', __FILE__), array(), $this->version);
-//	}
 
 
 	/**
@@ -365,7 +307,6 @@ class PayWithaLike {
 		
 		if (is_admin()) return;
 		
-		//echo "in ". __FILE__ .": ". __FUNCTION__ .": ". __LINE__ ."<br />";
 		wp_enqueue_script('jquery');
 		wp_enqueue_script( 'pay-with-a-like-js', plugins_url('/js/pay-with-a-like.js', __FILE__), array('jquery'), $this->version, true);
 		$this->_registered_scripts['pay-with-a-like-js'] = 'pay-with-a-like-js';
@@ -386,7 +327,6 @@ class PayWithaLike {
 				$locale = apply_filters( 'pwal_fb_locale', $locale );
 			}
 			
-			//wp_enqueue_script('facebook-all', 'http://connect.facebook.net/' . $locale . '/all.js', array( 'jquery' ) );
 			// We don't enqueue the JS just yet. We pass the JS url to out script where it will be loaded dynamcially. If needed.
 			$this->pwal_js_data['facebook-all-js'] = '//connect.facebook.net/' . $locale . '/all.js';
 				
@@ -399,7 +339,6 @@ class PayWithaLike {
 		if ( $this->options["use_linkedin"] && $this->options["load_linkedin"] ) {
 			if (empty($this->options["linkedin_button_lang"])) {
 				wp_enqueue_script( 'linkedin', '//platform.linkedin.com/in.js', array( 'jquery' ), '', true );
-				//$this->pwal_js_data['linkedin-js'] = '//platform.linkedin.com/in.js';
 				
 				$this->_registered_scripts['linkedin'] = 'linkedin';
 			}
@@ -412,7 +351,6 @@ class PayWithaLike {
 		}
 		
 		if ( $this->options["use_google"] && $this->options["load_google"] ) {
-			//wp_enqueue_script( 'google-plusone', '//apis.google.com/js/plusone.js', array( 'jquery' ), '1.0', true );
 			$this->pwal_js_data['google-plusone-js'] = '//apis.google.com/js/plusone.js';
 			$google_button_lang = $this->options["google_button_lang"];
 			if (!empty($google_button_lang)) {
@@ -428,10 +366,8 @@ class PayWithaLike {
 		$uploads = wp_upload_dir();
 		if ( !$uploads['error'] && file_exists( $uploads['basedir'] . "/". $this->plugin_name .".css" ) ) {
 			wp_enqueue_style( $this->plugin_name, $uploads['baseurl']. "/". $this->plugin_name .".css", array(), $this->version );
-			//$this->_registered_styles[$this->plugin_name] = $this->plugin_name;
 		} else if ( file_exists( $this->plugin_dir. "/css/front.css" ) ) {
 			wp_enqueue_style( $this->plugin_name, $this->plugin_url. "/css/front.css", array(), $this->version );
-			//$this->_registered_styles[$this->plugin_name] = $this->plugin_name;
 		}
 		
 		if ($this->buttons_added == false) {
@@ -468,9 +404,7 @@ class PayWithaLike {
 	}
 
 	function pwal_shortcode($atts, $content = null) {
-		//echo "DEBUG: in ". __FUNCTION__ .": ". __LINE__ ."<br />";
-		//echo "atts (before)<pre>"; print_r($atts); echo "</pre>";
-		//echo "content[". $content ."]<br />";
+
 				
 		$default_atts = array(
 			'id'				=>	'',
@@ -592,50 +526,6 @@ class PayWithaLike {
 			}
 			return $this->the_content_filter($content, $atts['wpautop']);
 		}
-
-		// If "Sitewide Like" is selected
-		//if ( $this->options["sitewide"] ) {
-		//	foreach ( $this->cookie_likes['data'] as $like ) {
-		//		if ( $like["post_id"] == md5( $this->sitewide_id . $this->options["salt"] ) ) {
-		//			if ($this->pwal_js_data['debug'] == 'true') {
-		//				echo "PWAL_DEBUG: ". __FUNCTION__ .": sitewide cookie exists<br />";
-		//			}
-		//			return $this->the_content_filter($content, $atts['wpautop']);
-		//		}
-		//	}
-		//	if ($this->pwal_js_data['debug'] == 'true')
-		//		echo "PWAL_DEBUG: ". __FUNCTION__ .": sitewide cookie not found<br />";
-		//} else {
-		//	if ($this->pwal_js_data['debug'] == 'true')
-		//		echo "PWAL_DEBUG: ". __FUNCTION__ .": option(sitewide): disabled<br />";
-		//}
-
-/*
-		foreach ( $this->cookie_likes['data'] as $like ) {
-			if (!empty($atts['post_id'])) {
-				if ( $like["post_id"] == md5( $atts['post_id'] . $this->options["salt"] ) ) {
-					if ($this->pwal_js_data['debug'] == 'true') {
-						echo "PWAL_DEBUG: ". __FUNCTION__ .": found like cookie for post_id[". $atts['post_id'] ."]<br />";
-					}
-					return $this->the_content_filter($content, $atts['wpautop']);
-				}
-			} else {
-				if ( $like["content_id"] == $atts['content_id'] ) {
-					if ($this->pwal_js_data['debug'] == 'true') {
-						echo "PWAL_DEBUG: ". __FUNCTION__ .": found like cookie for content_id[". $atts['content_id'] ."]<br />";
-					}
-					return $this->the_content_filter($content, $atts['wpautop']);
-				}
-			}
-		}
-*/
-		//if ($this->pwal_js_data['debug'] == 'true') {
-		//	echo "PWAL_DEBUG: ". __FUNCTION__ .": not found like cookie for post_id[". $atts['post_id'] ."]<br />";
-		//}
-		
-		//echo "DEBUG: in ". __FUNCTION__ .": ". __LINE__ ."<br />";
-		//echo "atts<pre>"; print_r($atts); echo "</pre>";
-		//echo "content[". $content ."]<br />";
 		
 		delete_transient('pwal_'.$atts['content_id']);
 		set_transient( 'pwal_'.$atts['content_id'], $content, 1 * HOUR_IN_SECONDS );
@@ -891,31 +781,7 @@ class PayWithaLike {
 						echo "PWAL_DEBUG: ". __FUNCTION__ .": option(home) is true<br />";
 					}
 				}
-
-/*			
-				if ($post_info['post_type'] != true) {
-					if ($this->pwal_js_data['debug'] == 'true') {
-						echo "PWAL_DEBUG: ". __FUNCTION__ .": post type [". $post->post_type ."] not enabled<br />";
-					}
-				} else {
-					if ($this->pwal_js_data['debug'] == 'true') {
-						echo "PWAL_DEBUG: ". __FUNCTION__ .": post type [". $post->post_type ."] is enabled<br />";
-					}
-				}
-			
-				if ($post_info['post'] != true) {
-					if ($this->pwal_js_data['debug'] == 'true') {
-						echo "PWAL_DEBUG: ". __FUNCTION__ .": post not enabled<br />";
-					}
-				} else {
-					if ($this->pwal_js_data['debug'] == 'true') {
-						echo "PWAL_DEBUG: ". __FUNCTION__ .": post id enabled<br />";
-					}
-				}
-			
-				if (($post_info['post'] != true) && ($post_info['post_type'] != true))
-					return false;
-*/						
+					
 			} else if ( is_archive() ) {
 			
 				if ($this->pwal_js_data['debug'] == 'true') {
@@ -933,30 +799,6 @@ class PayWithaLike {
 					}
 				}
 
-/*			
-				if ($post_info['post_type'] != true) {
-					if ($this->pwal_js_data['debug'] == 'true') {
-						echo "PWAL_DEBUG: ". __FUNCTION__ .": post type [". $post->post_type ."] not enabled<br />";
-					}
-				} else {
-					if ($this->pwal_js_data['debug'] == 'true') {
-						echo "PWAL_DEBUG: ". __FUNCTION__ .": post type [". $post->post_type ."] is enabled<br />";
-					}
-				}
-			
-				if ($post_info['post'] != true) {
-					if ($this->pwal_js_data['debug'] == 'true') {
-						echo "PWAL_DEBUG: ". __FUNCTION__ .": post not enabled<br />";
-					}
-				} else {
-					if ($this->pwal_js_data['debug'] == 'true') {
-						echo "PWAL_DEBUG: ". __FUNCTION__ .": post is enabled<br />";
-					}
-				}
-			
-				if (($post_info['post'] != true) && ($post_info['post_type'] != true))
-					return false;
-*/
 			}
 			
 		} else {
@@ -980,9 +822,6 @@ class PayWithaLike {
 			
 		global $post;
 		
-		//if ($this->pwal_js_data['debug'] == 'true') {
-		//	echo "PWAL_DEBUG: ". __FUNCTION__ .": -------------------- START --------------------<br />";
-		//}
 		
 		// Find method
 		$method = get_post_meta( $post->ID, 'pwal_method', true );
@@ -1912,42 +1751,9 @@ class PayWithaLike {
 		
 		$content = '';
 		
-		//echo "in ". __FUNCTION__ ."<br />";
-		//echo "pwal_info<pre>"; print_r($pwal_info); echo "</pre>";
-		//echo "post_content[". $post->post_content ."]<br />";
 		
 		if ((isset($pwal_info['content_reload'])) && ($pwal_info['content_reload'] == "ajax")) {
 			if ((isset($pwal_info['method'])) && ($pwal_info['method'] == 'tool')) {
-
-				//$pwal_info['content'] = '';
-				//if ((is_object($post)) && (has_shortcode( $post->post_content, 'pwal' ))) {
-				//
-				//	$pattern = get_shortcode_regex();
-				//	preg_match_all( '/'. $pattern .'/s', $post->post_content, $matches, PREG_SET_ORDER );
-				//	if (!empty($matches)) {
-				//		//echo "matches<pre>"; print_r($matches); echo "</pre>";
-				//		foreach($matches as $match_set) {
-				//			if ($match_set[2] = 'pwal') {
-				//				$shortcode_atts = shortcode_parse_atts( $match_set[3] );
-				//				//echo "shortcode_atts<pre>"; print_r($shortcode_atts); echo "</pre>";
-				//				if ((is_array($shortcode_atts)) && (isset($shortcode_atts['id'])) 
-				//				 && ($shortcode_atts['id'] == $pwal_info['content_id'])) {
-			 	//					//echo "matches<pre>"; print_r($matches); echo "</pre>";
-				//					 
-				//					$content = $this->pwal_shortcode($shortcode_atts, $match_set[5]);
-				//					//$content = $match_set[5];
-				//					//if ($shortcode_atts['wpautop'] == 'yes') {
-				//					//	$content = wpautop($content);
-				//					//}
-				//					
-				//					break;
-				//				}
-				//			}
-				//		}
-				//	}
-				//} else {
-				//	
-				//}
 
 				$trans_key = 'pwal_'. trim($pwal_info['content_id']);
 				//echo "trans_key[". $trans_key ."]<br />";
@@ -2511,31 +2317,7 @@ class PayWithaLike {
 			}
 			
 			switch ( $_GET['page'] ) {
-/*
-	    		case 'pay-with-a-like-accessibility':
-					if (isset($_POST['pwal']['home']))
-						$this->options['home']							= $_POST['pwal']['home'];
 
-					if (isset($_POST['pwal']['multi']))
-						$this->options['multi']							= $_POST['pwal']['multi'];
-
-					if (isset($_POST['pwal']['admin']))
-						$this->options['admin']							= $_POST['pwal']['admin'];
-
-					if (isset($_POST['pwal']['authorized']))
-						$this->options['authorized']					= $_POST['pwal']['authorized'];
-
-					if (isset($_POST['pwal']['level']))
-						$this->options['level']							= $_POST['pwal']['level'];
-
-					if (isset($_POST['pwal']['bot']))
-						$this->options['bot']							= $_POST['pwal']['bot'];
-
-					if (isset($_POST['pwal']['cookie']))
-						$this->options['cookie']						= intval($_POST['pwal']['cookie']);
-
-	     			break;
-*/
 	    		case 'pay-with-a-like-buttons':
 					//echo "_POST<pre>"; print_r($_POST); echo "</pre>";
 					//die();
@@ -2724,6 +2506,10 @@ class PayWithaLike {
 										'cookie' => true, 
 									));
 
+									$this->_fb_api_acctoken = $this->options['facebook_api_key'] .'|'. $this->options['facebook_api_secret'] ;
+									
+									$fb_resp_array = array() ; 
+									
 									foreach($_POST['pwal']['facebook_fan_page_urls_new'] as $url) {
 										$url = esc_url(trim($url));
 										//echo "url[". $url ."]<br />";
@@ -2733,51 +2519,34 @@ class PayWithaLike {
 										if (!empty($url_path)) {
 											$url_path = basename($url_path);
 								
-											//echo "url_path[". $url_path ."]<br />";
-											$url_path_int = intval($url_path);
-											//echo "url_path_int[". $url_path_int ."]<br />";
-											//echo "empty[". empty($url_path_int )."]<br />";
-											if (empty($url_path_int)) {
-												$query_str = "SELECT name,page_id, page_url,pic_square FROM page WHERE username = '". $url_path ."'";
-											}
-											else {
-												$query_str = "SELECT name,page_id, page_url,pic_square FROM page WHERE page_id = '". $url_path ."'";
+                                       		$fb_requrl  = $this->_fb_api_ep . $this->_fb_api_ver .'/'. $url_path;
+											$fb_requrl .= '?access_token=' . $this->_fb_api_acctoken ; 
+                                       		$fb_requrl .= '&fields=picture,name,about,link';
 
-											} 
-								
-											try {
-									
-												//echo "query_str[". $query_str ."]<br />";
-												$params = array(
-													'method'	=>	'fql.query',
-													'query'		=> 	$query_str
-												);
 
-												//echo "params<pre>"; print_r($params); echo "</pre>";
-			
-												//Run Query
-												$results = $facebook->api($params);
-												//echo "results<pre>"; print_r($results); echo "</pre>";
-												if ((!empty($results)) && (is_array($results))) {
-													foreach($results as $result) {
-														if ((!empty($result)) && (isset($result['page_id'])) && (!empty($result['page_id']))) {
-															$this->options['facebook_fan_pages'][$result['page_id']] = $result;
-														}
-													}
-												} 
-			
-											 } catch (PWALFacebookApiException $e) {
-												 //echo "Exception<pre>"; print_r($e); echo "</pre>";
-											 }
-										 }
+                                       		$fb_resp = wp_remote_get( $fb_requrl ) ;
+
+                                       		if( wp_remote_retrieve_response_code($fb_resp) == 200 &&  (!is_wp_error($fb_resp)) )
+                                       			$fb_resp_array = json_decode( $fb_resp['body'] , true );
+										}
+
+										if ((!empty($fb_resp_array))) {
+	                                        foreach( $fb_resp_array as $result => $value) {
+		                                        if( $result == 'id' ) : 
+
+		                                        	$fb_resp_array['page_id']     = $value ; 
+		                                            $fb_resp_array['page_url']    = $fb_resp_array['link'] ; 
+		                                            $fb_resp_array['pic_square']  = $fb_resp_array['picture']['data']['url'] ; 
+		                                        	$this->options['facebook_fan_pages'][$value] = $fb_resp_array;
+
+		                                        endif ; 
+		                                    }
+	                                    }
+
 								 	}
-									//echo "facebook_fan_pages<pre>"; print_r($this->options['facebook_fan_pages']); echo "</pre>";
-									//echo "end<br />";
-									//die();
+	
 								}
-								//echo "_POST<pre>"; print_r($_POST); echo "</pre>";
-								//echo "options<pre>"; print_r($this->options); echo "</pre>";
-								//die();
+
 								break;
 				
 							case 'linkedin':
@@ -2880,30 +2649,6 @@ class PayWithaLike {
 						$this->options['container_width']					= esc_attr($_POST['pwal']['container_width']);
 					else
 						$this->options['container_width']					= '';
-
-
-//					if (isset($_POST['pwal']['container_height']))
-//						$this->options['container_height']					= esc_attr($_POST['pwal']['container_height']);
-//					else
-//						$this->options['container_height']					= '';
-
-
-//					if (isset($_POST['pwal']['container_border_width']))
-//						$this->options['container_border_width']			= esc_attr($_POST['pwal']['container_border_width']);
-//					else
-//						$this->options['container_border_width']			= '';
-
-
-//					if (isset($_POST['pwal']['container_border_style']))
-//						$this->options['container_border_style']			= esc_attr($_POST['pwal']['container_border_style']);
-//					else
-//						$this->options['container_border_style']			= '';
-
-
-//					if (isset($_POST['pwal']['container_border_color']))
-//						$this->options['container_border_color']			= esc_attr($_POST['pwal']['container_border_color']);
-//					else
-//						$this->options['container_border_color']			= '';
 
 
 					if (isset($_POST['pwal']['content_reload']))
@@ -3018,12 +2763,6 @@ class PayWithaLike {
 		global $pwal_options_page;
 		$screen = get_current_screen();
 		
-//		if ( !$this->options["no_visit"] && $screen->id != $pwal_options_page ) {
-//			/* translators: %s means settings here */
-//			echo '<div class="updated fade"><p>' .
-//				sprintf(__("<b>[Pay With a Like]</b> It looks like you have just installed the plugin. You may want to adjust some %s. If you are using a cache plugin, please clear your cache.", 'pwal'),"<a href='".admin_url('options-general.php?page=pay-with-a-like')."'>".__("settings","pwal")."</a>") .
-//				'</p></div>';
-//		}
 		// If admin visits setting page, remove this annoying message :P
 		if ( $screen->id == $pwal_options_page && !$this->options["no_visit"] ) {
 			$this->options["no_visit"] = "true";
@@ -3110,26 +2849,7 @@ class PayWithaLike {
 						</form>
 						<?php
 						break;
-/*
-					case 'pay-with-a-like-accessibility':
-						?>
-						<form id="pwal-settings-form-<?php echo $pwal_page; ?>" class="pwal-settings-form" method="post" action="<?php admin_url( '/options-general.php?page='. $pwal_page ); ?>">
-							<?php wp_nonce_field( 'pwal_update_settings', 'pwal_nonce' ); ?>
-							<input type="hidden" name="pwal_action" value="update_pwal" />
-							<input type="hidden" name="page" value="<?php echo $pwal_page; ?>" />
-							<h2><?php _e('Pay With a Like Accessibility Settings','pwal') ?></h2>
-							<div id="poststuff" class="pwal-settings">
-								<div id="post-body" class="metabox-holder columns-1">
-									<div id="post-body-content">
-										<?php pwal_admin_panels_visibility(); ?>
-									</div>
-								</div>
-							</div>
-							<p class="submit"><input type="submit" class="button-primary" value="<?php _e('Save Changes', 'pwal') ?>" /></p>
-						</form>
-						<?php
-						break;
-*/			
+	
 					case 'pay-with-a-like-buttons':
 					    $tabs = array( 	
 				    		'buttons'		=> __('Social Buttons', 'pwal'),
