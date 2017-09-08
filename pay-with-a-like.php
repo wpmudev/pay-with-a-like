@@ -370,7 +370,7 @@ class PayWithaLike {
 			wp_enqueue_style( $this->plugin_name, $this->plugin_url. "/css/front.css", array(), $this->version );
 		}
 		
-		if ($this->buttons_added == false) {
+		if ($this->buttons_added == true) {
 			if (!empty($this->_registered_scripts)) {
 				foreach($this->_registered_scripts as $_handle) {
 					wp_dequeue_script($_handle);
