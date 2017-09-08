@@ -1,3 +1,12 @@
+v2.0.2
+- Fix: remove redundant code
+- Fix: update FB API calls
+- Fix: improved error checks and flow logic in code
+- Fix: incorrect text domain in language files
+- Fix: FB like button is not showing
+- Fix: Fix js error in Editor mce popup for WP 4.8
+- Fix: Fix js error - pwal_data is undefined
+
 V2.0.1.5: 2015-04-21
 - Fixes possible WordPress XSS bug.
 

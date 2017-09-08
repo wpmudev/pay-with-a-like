@@ -3,7 +3,7 @@
 Plugin Name: Pay With a Like
 Description: Allows protecting posts/pages until visitor likes the page or parts of the page with Facebook, Linkedin, Twitter or Google +1.
 Plugin URI: http://premium.wpmudev.org/project/pay-with-a-like
-Version: 2.0.1.5
+Version: 2.0.2-BETA-1
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 TextDomain: pwal
@@ -34,7 +34,7 @@ if ( !class_exists( 'PayWithaLike' ) ) {
 
 class PayWithaLike {
 
-	var $version					=	"2.0.1.2";
+	var $version					=	"2.0.2-BETA-1";
 	var $pwal_js_data 				= 	array();
 	var $_pagehooks 				= 	array();
 	var $_options_defaults 			= 	array();
