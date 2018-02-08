@@ -271,7 +271,7 @@ var wpmudev_pwal = jQuery.extend(wpmudev_pwal || {}, {
 								}
 							
 								if (deferred_reload == true) {
-									window.location.href = window.location.href;
+									location.reload(true);
 								}
 							}
 												
