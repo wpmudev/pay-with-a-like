@@ -220,7 +220,9 @@ function pwal_admin_panels_visibility() {
 				<p class="description"><?php _e('If the above field is selected as yes, users having a higher level than this selection will see the full content.','pwal')?></p>
 				<select id="pwal_level" name="pwal[level]">
 					<?php
-						if (count($wp_roles)) {
+						$log_display_levels = array();
+
+						if ( ! empty( $wp_roles ) ) {
 							foreach ($wp_roles->roles as $role_slug => $role) {
 								$role_level = $pwal->get_user_role_highest_level($role['capabilities']);
 								if (!isset($log_display_levels['level_'.$role_level])) {
@@ -230,7 +232,7 @@ function pwal_admin_panels_visibility() {
 								}
 							}
 						}
-						if (count($log_display_levels)) {
+						if ( ! empty( $log_display_levels ) ) {
 							ksort($log_display_levels, SORT_NUMERIC);
 							krsort($log_display_levels, SORT_NUMERIC);
 							foreach ($log_display_levels as $role_level_key => $role_level_display) {
